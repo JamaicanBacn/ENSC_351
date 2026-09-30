@@ -50,8 +50,9 @@ int spi_transfer( uint8_t* tx , uint8_t * rx , size_t len)
         .bit_per_word = spi_word_length, // bits per transfer
     };
 
-    return ioctl(spi_fd , SPI_IOC_MESSAGE(1) , &transfer);
+    return ioctl(spi_fd , SPI_IOC_MESSAGE(1) , &spi_ioc_transfer);
 }
+
 void spi_close(void)
 {
     if( spi_fd >= 0)
