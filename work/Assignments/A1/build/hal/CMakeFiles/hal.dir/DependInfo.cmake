@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c" "hal/CMakeFiles/hal.dir/src/gpio.c.o" "gcc" "hal/CMakeFiles/hal.dir/src/gpio.c.o.d"
   "/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c" "hal/CMakeFiles/hal.dir/src/m3208.c.o" "gcc" "hal/CMakeFiles/hal.dir/src/m3208.c.o.d"
   "/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c" "hal/CMakeFiles/hal.dir/src/spi.c.o" "gcc" "hal/CMakeFiles/hal.dir/src/spi.c.o.d"
   )

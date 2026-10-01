@@ -32,7 +32,10 @@ void JoyStick_Read( JoyStick* joystick )
 
     printf( "%d , %d : " , raw_x_value , raw_y_value);
 
+    // Normalized and Centered to [-1 , 1 ]
     joystick->x_pos = (float)(raw_x_value - 2048) / 2047 ;
     joystick->y_pos = (float)(raw_y_value - 2048) / 2047 ;
+
+    joystick->sel;
 
 }

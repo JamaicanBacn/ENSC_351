@@ -2,6 +2,8 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 
+#define DEADZONE 0.05f // 5 percent deadzone 
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "m3208.h"
@@ -12,6 +14,7 @@ typedef struct {
     uint8_t y_channel; // channel for Y ADC
     float x_pos;
     float y_pos;
+    bool sel;
 
 } JoyStick;
 

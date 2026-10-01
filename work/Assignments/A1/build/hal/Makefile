@@ -130,6 +130,30 @@ hal/fast:
 	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/build
 .PHONY : hal/fast
 
+src/gpio.o: src/gpio.c.o
+.PHONY : src/gpio.o
+
+# target to build an object file
+src/gpio.c.o:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/gpio.c.o
+.PHONY : src/gpio.c.o
+
+src/gpio.i: src/gpio.c.i
+.PHONY : src/gpio.i
+
+# target to preprocess a source file
+src/gpio.c.i:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/gpio.c.i
+.PHONY : src/gpio.c.i
+
+src/gpio.s: src/gpio.c.s
+.PHONY : src/gpio.s
+
+# target to generate assembly for a file
+src/gpio.c.s:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/gpio.c.s
+.PHONY : src/gpio.c.s
+
 src/m3208.o: src/m3208.c.o
 .PHONY : src/m3208.o
 
@@ -187,6 +211,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... hal"
+	@echo "... src/gpio.o"
+	@echo "... src/gpio.i"
+	@echo "... src/gpio.s"
 	@echo "... src/m3208.o"
 	@echo "... src/m3208.i"
 	@echo "... src/m3208.s"

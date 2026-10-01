@@ -73,14 +73,14 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "Joystick::@5f5a17c01335469806cb",
-					"jsonFile" : "target-Joystick-Debug-7c3b1a4a57445def037f.json",
+					"jsonFile" : "target-Joystick-Debug-69972f17c408560c1d63.json",
 					"name" : "Joystick",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "hal::@ad971efe0e95b39e260f",
-					"jsonFile" : "target-hal-Debug-8ede679a7422ec8b960b.json",
+					"jsonFile" : "target-hal-Debug-aeae57ce00388970b477.json",
 					"name" : "hal",
 					"projectIndex" : 0
 				}

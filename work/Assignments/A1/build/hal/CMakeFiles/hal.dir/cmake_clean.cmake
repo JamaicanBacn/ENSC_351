@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/hal.dir/src/gpio.c.o"
+  "CMakeFiles/hal.dir/src/gpio.c.o.d"
   "CMakeFiles/hal.dir/src/m3208.c.o"
   "CMakeFiles/hal.dir/src/m3208.c.o.d"
   "CMakeFiles/hal.dir/src/spi.c.o"

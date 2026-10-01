@@ -1,6 +1,7 @@
 include_directories(include)
 file(GLOB MY_SOURCES "src/*.c")
-add_executable( Joystick ${MY_SOURCES})
+add_executable( Joystick ${MY_SOURCES}
+    src/timing.c)
 
 target_link_libraries( Joystick LINK_PRIVATE hal)
 
