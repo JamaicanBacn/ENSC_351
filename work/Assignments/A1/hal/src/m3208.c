@@ -7,7 +7,7 @@
 0000 0110
 
 */
-int m_3208_read( uint8_t channel )
+uint16_t m_3208_read( uint8_t channel )
 {
     uint8_t tx[3] = {0};
     uint8_t rx[3] = {0};

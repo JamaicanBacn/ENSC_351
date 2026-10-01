@@ -5,7 +5,7 @@
 #define Y_CHANNEL 1
 
 #define SPI_PATH    "/dev/spidev0.0"
-#define SPI_SPEED   50000
+#define SPI_SPEED   100
 #define SPI_BPT     8 // bits per transfer
 
 int main()
