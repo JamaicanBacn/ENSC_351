@@ -12,14 +12,16 @@ JoyStick JoyStick_Init( uint8_t x_channel,
         .x_channel = x_channel,
         .y_channel = y_channel,
         .y_pos = 0,
-        .x_pos = 0;
-    }
+        .x_pos = 0
+    };
 
     if(spi_init( spi_path , speed , bits_per_transfer) < 0)
     {
-        stderr("SPI_INIT_FAILURE");
+        printf("SPI_INIT_FAILURE");
         exit(1);
     }
+
+    return joystick;
 
 }
 

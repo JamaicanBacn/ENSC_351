@@ -9,7 +9,7 @@ int spi_init(char* spi_path , uint32_t speed , uint32_t bits_per_transfer )
 {
 
     // Open spi file path 
-    spi_fd = fopen("spi_path" , O_RDWR);
+    spi_fd = open(spi_path , O_RDWR);
     spi_speed = speed;
     spi_word_length = bits_per_transfer;
 
@@ -27,7 +27,7 @@ int spi_init(char* spi_path , uint32_t speed , uint32_t bits_per_transfer )
         return -1;
 
     // Set transfer bit length
-    if (ioctl(spi_fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0)
+    if (ioctl(spi_fd, SPI_IOC_WR_BITS_PER_WORD, &bits_per_transfer) < 0)
         return -1;
 
     // Set clock speed
@@ -42,15 +42,14 @@ int spi_init(char* spi_path , uint32_t speed , uint32_t bits_per_transfer )
 
 int spi_transfer( uint8_t* tx , uint8_t * rx , size_t len)
 {
-    struct spi_ioc_transfer = {
+    struct spi_ioc_transfer transfer = {
         .tx_buf = (unsigned long)tx, // transfer buffer
         .rx_buf = (unsigned long)rx, // receive buffer
         .len = len, // length in bytes
         .speed_hz = spi_speed, // clock speed
-        .bit_per_word = spi_word_length, // bits per transfer
     };
 
-    return ioctl(spi_fd , SPI_IOC_MESSAGE(1) , &spi_ioc_transfer);
+    return ioctl(spi_fd , SPI_IOC_MESSAGE(1) , &transfer);
 }
 
 void spi_close(void)

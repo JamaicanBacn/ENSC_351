@@ -16,7 +16,7 @@ int main()
 
     while(1)
     {
-        JoyStick_Read(joystick);
+        JoyStick_Read(&joystick);
         printf( "X_pos : %f   Y_pos : %f \n" , joystick.x_pos , joystick.y_pos);
     }
 

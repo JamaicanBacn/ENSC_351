@@ -1,7 +1,6 @@
 #include "m3208.h"
 
 
-static uint32_t len = 12;
 
 /*
 
@@ -31,12 +30,12 @@ int m_3208_read( uint8_t channel )
     */
 
 
-    tx[0] = M3208_TRANSMISSION_INIT | ( (channel & 0b100) >> 2);
-    tx[1] = (channel & 0b011 ) << 6;
+    tx[0] = M3208_TRANSMISSION_INIT | ( (channel & 0x4) >> 2);
+    tx[1] = (channel & 0x3 ) << 6;
 
-    if (spi_transfer( &tx , &rx , 3) < 0)
+    if (spi_transfer( tx , rx , BPT) < 0)
     {
-        stderr("SPI TRANSFER FAILED");
+        printf("SPI TRANSFER FAILED");
         exit(1);
     }
 
@@ -48,7 +47,7 @@ int m_3208_read( uint8_t channel )
 
     */
 
-    return ( (rx[1] & 0b1111) << 8 ) | rx[2] ;
+    return ( (rx[1] & 0xF) << 8 ) | rx[2] ;
 
 
 }

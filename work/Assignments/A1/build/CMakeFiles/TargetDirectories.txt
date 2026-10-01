@@ -1,0 +1,8 @@
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles/rebuild_cache.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal/CMakeFiles/hal.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal/CMakeFiles/rebuild_cache.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app/CMakeFiles/Joystick.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app/CMakeFiles/rebuild_cache.dir

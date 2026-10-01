@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal",
+  "command": "/usr/bin/aarch64-linux-gnu-gcc  -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include -g -std=gnu11 -Wall -Werror -Wpedantic -Wextra -fdiagnostics-color -fsanitize=address -pthread -o CMakeFiles/hal.dir/src/m3208.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c",
+  "file": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c",
+  "output": "hal/CMakeFiles/hal.dir/src/m3208.c.o"
+},
+{
+  "directory": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal",
+  "command": "/usr/bin/aarch64-linux-gnu-gcc  -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include -g -std=gnu11 -Wall -Werror -Wpedantic -Wextra -fdiagnostics-color -fsanitize=address -pthread -o CMakeFiles/hal.dir/src/spi.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c",
+  "file": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c",
+  "output": "hal/CMakeFiles/hal.dir/src/spi.c.o"
+},
+{
+  "directory": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app",
+  "command": "/usr/bin/aarch64-linux-gnu-gcc  -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/app/include -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include -g -std=gnu11 -Wall -Werror -Wpedantic -Wextra -fdiagnostics-color -fsanitize=address -pthread -o CMakeFiles/Joystick.dir/src/joystick.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c",
+  "file": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c",
+  "output": "app/CMakeFiles/Joystick.dir/src/joystick.c.o"
+},
+{
+  "directory": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app",
+  "command": "/usr/bin/aarch64-linux-gnu-gcc  -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/app/include -I/home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include -g -std=gnu11 -Wall -Werror -Wpedantic -Wextra -fdiagnostics-color -fsanitize=address -pthread -o CMakeFiles/Joystick.dir/src/main.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c",
+  "file": "/home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c",
+  "output": "app/CMakeFiles/Joystick.dir/src/main.c.o"
+}
+]
