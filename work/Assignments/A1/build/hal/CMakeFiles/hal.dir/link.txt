@@ -1,2 +1,0 @@
-/usr/bin/aarch64-linux-gnu-ar qc libhal.a CMakeFiles/hal.dir/src/gpio.c.o CMakeFiles/hal.dir/src/m3208.c.o CMakeFiles/hal.dir/src/spi.c.o
-/usr/bin/aarch64-linux-gnu-ranlib libhal.a
