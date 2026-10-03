@@ -35,8 +35,6 @@ void JoyStick_Read( JoyStick* joystick )
     uint16_t raw_x_value = m_3208_read( joystick->x_channel );
     uint16_t raw_y_value = m_3208_read( joystick->y_channel );
 
-    printf( "%d , %d : " , raw_x_value , raw_y_value);
-
     // Normalized and Centered to [-1 , 1 ]
     joystick->x_pos = (float)(raw_x_value - 2048) / 2047 ;
     joystick->y_pos = (float)(raw_y_value - 2048) / 2047 ;
