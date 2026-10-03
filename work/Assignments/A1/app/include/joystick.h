@@ -12,6 +12,7 @@ typedef struct {
 
     uint8_t x_channel; // channel for X ADC
     uint8_t y_channel; // channel for Y ADC
+    struct  gpiod_line *sel_line;
     float x_pos;
     float y_pos;
     bool sel;
