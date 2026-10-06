@@ -4,7 +4,9 @@
 JoyStick JoyStick_Init( uint8_t x_channel,
                         uint8_t y_channel,
                         char* spi_path,
-                        uint32_t speed,
+                        unsigned int speed,
+                        char* gpio_path,
+                        unsigned int gpio_offset,
                         uint32_t bits_per_word
                         )
 {
@@ -20,7 +22,7 @@ JoyStick JoyStick_Init( uint8_t x_channel,
         exit(1);
     }
 
-    if( gpio_init() < 0 )
+    if( gpio_init( gpio_path , gpio_offset ) < 0 )
     {
         exit(1);
     }
@@ -39,6 +41,6 @@ void JoyStick_Read( JoyStick* joystick )
     joystick->x_pos = (float)(raw_x_value - 2048) / 2047 ;
     joystick->y_pos = (float)(raw_y_value - 2048) / 2047 ;
 
-    joystick->sel = gpio_read( joystick->sel_line);
+    joystick->sel = !gpio_read();
 
 }

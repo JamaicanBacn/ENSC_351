@@ -1,54 +1,92 @@
 
 #include "gpio.h"
 
+static struct gpiod_chip* chip = NULL; // what gpio chip is being used
+static struct gpiod_line_request* request = NULL; // line request
+static unsigned int gpio_offset; // line offset in the gpio file
 
-
-int gpio_init( struct gpiod_line *sel_line )
+int gpio_init( const char* chip_path , unsigned int offset)
 {
-    // Requests the line that GPIO18 writes to
-    sel_line = gpiod_line_find("GPIO18");
+    struct gpiod_line_settings*     settings = NULL;
+    struct gpiod_request_config *   request_config = NULL;
+    struct gpiod_line_config *      line_config = NULL;
 
-    if( sel_line = NULL)
+    gpio_offset = offset;
+
+    chip = gpiod_chip_open(chip_path); // check if the gpio acess 
+
+    if( !chip )
     {
-        perror("could not find GPIO18");
+        perror("GPIOD CHIP OPEN FAILURE");
         return -1;
     }
 
-    /*
-        gpio_line_request_input_flags
-        ARGUMENTS
-            - gpio line that will be requested
-            - name of the line 
-            - Other flags
-    */
+    // set the line settings
+    settings = gpiod_line_settings_new();
 
-    int gpio_init = gpio_line_request_input_flags
-        ( 
-        sel_line ,
-        "joystick_sel" ,
-        GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP
-        );
-
-    if( gpio_init < 0 )
+    if( !settings )
     {
-        perror("Could not request GPIO18");
+        perror("GPIOD LINE SETTING FAILURE");
         return -1;
     }
+
+    // set the direction of the pin
+    if( gpiod_line_settings_set_direction(settings , GPIOD_LINE_DIRECTION_INPUT) < 0 )
+    {
+        perror("GPIO SET DIRECTION FAILURE");
+        return -1;
+    }
+
+    line_config = gpiod_line_config_new();
+
+    if( !line_config )
+    {
+        perror("GPIO_LINE_CONFIG_NEW FAILURE");
+        return -1;
+    }    
+
+    if( gpiod_line_config_add_line_settings(
+        line_config,
+        &gpio_offset,
+        1,
+        settings) < 0 )
+        {
+            perror(" GPIOD LINE CONFIG ADD LINE SETTINGS FAILURE");
+        }
+
+    request = gpiod_chip_request_lines(
+        chip,
+        request_config,
+        line_config
+    );
+
+    if( !request )
+    {
+        perror("GPIOD LINE REQUEST CONFIG");
+        return -1;
+    }
+
+    gpiod_request_config_free(request_config);
+    gpiod_line_config_free(line_config);
+    gpiod_line_settings_free(settings);
+
+    return 0;
 
 }
 
-int gpio_read( struct gpiod_line *sel_line )
+int gpio_read( void )
 {
-    int gpio_read_value = gpio_line_get_value(sel_line);
+    enum gpiod_line_value value;
 
-    //gpio_read_value < 0 indicated it failed
+    value = gpiod_line_request_get_value( request , gpio_offset);
+    
 
-    if( gpio_read_value < 0 )
+    if( value == GPIOD_LINE_VALUE_ERROR )
     {
-        perror("GPIO_READ FAILED");
+        perror("GPIO LINE READ FAILURE");
         return -1;
     }
 
-    // button is active low , return the inverse
-    return !gpio_read_value;
+    return value;
+
 }

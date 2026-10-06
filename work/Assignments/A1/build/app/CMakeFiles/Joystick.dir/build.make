@@ -76,43 +76,43 @@ app/CMakeFiles/Joystick.dir/src/joystick.c.o: app/CMakeFiles/Joystick.dir/flags.
 app/CMakeFiles/Joystick.dir/src/joystick.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c
 app/CMakeFiles/Joystick.dir/src/joystick.c.o: app/CMakeFiles/Joystick.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object app/CMakeFiles/Joystick.dir/src/joystick.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/joystick.c.o -MF CMakeFiles/Joystick.dir/src/joystick.c.o.d -o CMakeFiles/Joystick.dir/src/joystick.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/joystick.c.o -MF CMakeFiles/Joystick.dir/src/joystick.c.o.d -o CMakeFiles/Joystick.dir/src/joystick.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c
 
 app/CMakeFiles/Joystick.dir/src/joystick.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Joystick.dir/src/joystick.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c > CMakeFiles/Joystick.dir/src/joystick.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c > CMakeFiles/Joystick.dir/src/joystick.c.i
 
 app/CMakeFiles/Joystick.dir/src/joystick.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Joystick.dir/src/joystick.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c -o CMakeFiles/Joystick.dir/src/joystick.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/joystick.c -o CMakeFiles/Joystick.dir/src/joystick.c.s
 
 app/CMakeFiles/Joystick.dir/src/main.c.o: app/CMakeFiles/Joystick.dir/flags.make
 app/CMakeFiles/Joystick.dir/src/main.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c
 app/CMakeFiles/Joystick.dir/src/main.c.o: app/CMakeFiles/Joystick.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object app/CMakeFiles/Joystick.dir/src/main.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/main.c.o -MF CMakeFiles/Joystick.dir/src/main.c.o.d -o CMakeFiles/Joystick.dir/src/main.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/main.c.o -MF CMakeFiles/Joystick.dir/src/main.c.o.d -o CMakeFiles/Joystick.dir/src/main.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c
 
 app/CMakeFiles/Joystick.dir/src/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Joystick.dir/src/main.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c > CMakeFiles/Joystick.dir/src/main.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c > CMakeFiles/Joystick.dir/src/main.c.i
 
 app/CMakeFiles/Joystick.dir/src/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Joystick.dir/src/main.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c -o CMakeFiles/Joystick.dir/src/main.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/main.c -o CMakeFiles/Joystick.dir/src/main.c.s
 
 app/CMakeFiles/Joystick.dir/src/timing.c.o: app/CMakeFiles/Joystick.dir/flags.make
 app/CMakeFiles/Joystick.dir/src/timing.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c
 app/CMakeFiles/Joystick.dir/src/timing.c.o: app/CMakeFiles/Joystick.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object app/CMakeFiles/Joystick.dir/src/timing.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/timing.c.o -MF CMakeFiles/Joystick.dir/src/timing.c.o.d -o CMakeFiles/Joystick.dir/src/timing.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT app/CMakeFiles/Joystick.dir/src/timing.c.o -MF CMakeFiles/Joystick.dir/src/timing.c.o.d -o CMakeFiles/Joystick.dir/src/timing.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c
 
 app/CMakeFiles/Joystick.dir/src/timing.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Joystick.dir/src/timing.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c > CMakeFiles/Joystick.dir/src/timing.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c > CMakeFiles/Joystick.dir/src/timing.c.i
 
 app/CMakeFiles/Joystick.dir/src/timing.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Joystick.dir/src/timing.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c -o CMakeFiles/Joystick.dir/src/timing.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/app && /usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/app/src/timing.c -o CMakeFiles/Joystick.dir/src/timing.c.s
 
 # Object files for target Joystick
 Joystick_OBJECTS = \
