@@ -130,6 +130,30 @@ hal/fast:
 	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/build
 .PHONY : hal/fast
 
+src/LED.o: src/LED.c.o
+.PHONY : src/LED.o
+
+# target to build an object file
+src/LED.c.o:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/LED.c.o
+.PHONY : src/LED.c.o
+
+src/LED.i: src/LED.c.i
+.PHONY : src/LED.i
+
+# target to preprocess a source file
+src/LED.c.i:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/LED.c.i
+.PHONY : src/LED.c.i
+
+src/LED.s: src/LED.c.s
+.PHONY : src/LED.s
+
+# target to generate assembly for a file
+src/LED.c.s:
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f hal/CMakeFiles/hal.dir/build.make hal/CMakeFiles/hal.dir/src/LED.c.s
+.PHONY : src/LED.c.s
+
 src/gpio.o: src/gpio.c.o
 .PHONY : src/gpio.o
 
@@ -211,6 +235,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... hal"
+	@echo "... src/LED.o"
+	@echo "... src/LED.i"
+	@echo "... src/LED.s"
 	@echo "... src/gpio.o"
 	@echo "... src/gpio.i"
 	@echo "... src/gpio.s"

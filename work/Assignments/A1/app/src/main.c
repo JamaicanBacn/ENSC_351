@@ -1,14 +1,20 @@
 
 #include "joystick.h"
+#include "LED.h"
+#include <time.h>
 
 #define X_CHANNEL 0
 #define Y_CHANNEL 1
 
 #define SPI_PATH    "/dev/spidev0.0"
-#define GPIO_PATH   "/dev/gpiochip2"
-#define GPIO_OFFSET 11
 #define SPI_SPEED   10000
 #define SPI_BPT     8 // bits per transfer
+
+#define GPIO_PATH   "/dev/gpiochip2"
+#define GPIO_OFFSET 11
+
+#define LED_GREEN_PATH   "/sys/class/leds/ACT/brightness"
+#define LED_RED_PATH     "/sys/class/leds/PWR/brightness"
 
 #define INTRODUCTION_MSG "-------- Welcome to Reaction Timer ----------- \n"
 
@@ -19,9 +25,35 @@
 #define RULES_4 "                       Press down the joystick to begin                \n"
 
 static JoyStick joystick = {0};
+static FILE* LED_GREEN = NULL;
+static FILE* LED_RED   = NULL; 
 
 void print_introduction(void);
 void gameloop( void );
+void get_ready_led( void );
+
+static long long getTimeInMs(void)
+{
+    struct timespec spec;
+    clock_gettime( CLOCK_REALTIME, &spec);
+    long long seconds = spec.tv_sec;
+    long long nanoSeconds = spec.tv_nsec;
+    long long milliSeconds = seconds * 1000 + nanoSeconds / 1000000;
+
+    return milliSeconds;
+
+}
+
+static void sleepForMs(long long delayInMs)
+{
+    const long long NS_PER_MS = 1000 * 1000;
+    const long long NS_PER_SECOND = 1000000000;
+    long long delayNs = delayInMs * NS_PER_MS;
+    int seconds = delayNs / NS_PER_SECOND;
+    int nanoseconds = delayNs % NS_PER_SECOND;
+    struct timespec reqDelay = {seconds, nanoseconds};
+    nanosleep(&reqDelay, (struct timespec *) NULL);
+}
 
 int main()
 {
@@ -33,7 +65,12 @@ int main()
                                         SPI_BPT 
                                     );
 
+    
+    LED_GREEN = init_led( LED_GREEN_PATH);
+    LED_RED   = init_led( LED_RED_PATH  );
+
     print_introduction();
+    get_ready_led();
     gameloop();
 
     return 0;
@@ -88,5 +125,20 @@ void check_start_position()
         {
             JoyStick_Read(&joystick);
         }
+    }
+}
+
+void get_ready_led( void )
+{
+    for( int i = 0; i < 4 ; i++ ){
+        
+        write_to_led( LED_GREEN , "1");
+        write_to_led( LED_RED ,   "0");
+        sleepForMs(250);
+
+        write_to_led( LED_GREEN , "0" );
+        write_to_led( LED_RED , "1"   );
+
+        sleepForMs(250);
     }
 }

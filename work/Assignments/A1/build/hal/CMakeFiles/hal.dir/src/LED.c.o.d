@@ -1,7 +1,7 @@
-hal/CMakeFiles/hal.dir/src/gpio.c.o: \
- /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c \
+hal/CMakeFiles/hal.dir/src/LED.c.o: \
+ /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c \
  /usr/include/stdc-predef.h \
- /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include/gpio.h \
+ /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/include/LED.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -25,10 +25,13 @@ hal/CMakeFiles/hal.dir/src/gpio.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
- /usr/include/x86_64-linux-gnu/bits/floatn-common.h /usr/include/gpiod.h \
- /usr/lib/gcc/x86_64-linux-gnu/14/include/stdbool.h \
- /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
- /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-least.h
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/cloexec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/endianness.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/bits/struct_stat.h
