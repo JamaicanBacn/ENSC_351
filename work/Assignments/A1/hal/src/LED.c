@@ -1,17 +1,25 @@
 
 #include "LED.h"
 
-FILE* init_led(char * led_path)
+FILE* init_led(char * led_brightness , char* led_trigger)
 {
-    FILE* LED_trigger_path = fopen(led_path , "w");
+    FILE* LED_trigger_path      = fopen(led_trigger , "w");
+    FILE* LED_brightness_path   = fopen(led_brightness    , "w");
 
-    if( LED_trigger_path == NULL )
+    if( LED_trigger_path == NULL || LED_brightness_path == NULL )
     {
         perror("LED OPENING FAILED");
         return NULL;
     }
 
-    return LED_trigger_path;
+    int written = fprintf( LED_trigger_path , "none");
+    if( written <= 0 )
+    {
+        perror("TRIGGER FAILURE");
+        return NULL;
+    }
+
+    return LED_brightness_path;
 }
 
 int write_to_led( FILE* led_path , char* value )

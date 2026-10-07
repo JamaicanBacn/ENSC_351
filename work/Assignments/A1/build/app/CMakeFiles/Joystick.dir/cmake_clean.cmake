@@ -4,8 +4,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/Joystick.dir/src/joystick.c.o.d"
   "CMakeFiles/Joystick.dir/src/main.c.o"
   "CMakeFiles/Joystick.dir/src/main.c.o.d"
-  "CMakeFiles/Joystick.dir/src/timing.c.o"
-  "CMakeFiles/Joystick.dir/src/timing.c.o.d"
   "Joystick"
   "Joystick.pdb"
 )

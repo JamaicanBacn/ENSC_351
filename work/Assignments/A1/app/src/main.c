@@ -13,8 +13,11 @@
 #define GPIO_PATH   "/dev/gpiochip2"
 #define GPIO_OFFSET 11
 
-#define LED_GREEN_PATH   "/sys/class/leds/ACT/brightness"
-#define LED_RED_PATH     "/sys/class/leds/PWR/brightness"
+#define LED_GREEN_BRIGHTNESS   "/sys/class/leds/ACT/brightness"
+#define LED_RED_BRIGHTNESS     "/sys/class/leds/PWR/brightness"
+
+#define LED_GREEN_TRIGGER   "/sys/class/leds/ACT/trigger"
+#define LED_RED_TRIGGER     "/sys/class/leds/PWR/trigger"
 
 #define INTRODUCTION_MSG "-------- Welcome to Reaction Timer ----------- \n"
 
@@ -66,8 +69,8 @@ int main()
                                     );
 
     
-    LED_GREEN = init_led( LED_GREEN_PATH);
-    LED_RED   = init_led( LED_RED_PATH  );
+    LED_GREEN = init_led( LED_GREEN_BRIGHTNESS , LED_GREEN_TRIGGER);
+    LED_RED   = init_led( LED_RED_BRIGHTNESS , LED_RED_TRIGGER  );
 
     print_introduction();
     get_ready_led();

@@ -178,30 +178,6 @@ src/main.c.s:
 	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/Joystick.dir/build.make app/CMakeFiles/Joystick.dir/src/main.c.s
 .PHONY : src/main.c.s
 
-src/timing.o: src/timing.c.o
-.PHONY : src/timing.o
-
-# target to build an object file
-src/timing.c.o:
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/Joystick.dir/build.make app/CMakeFiles/Joystick.dir/src/timing.c.o
-.PHONY : src/timing.c.o
-
-src/timing.i: src/timing.c.i
-.PHONY : src/timing.i
-
-# target to preprocess a source file
-src/timing.c.i:
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/Joystick.dir/build.make app/CMakeFiles/Joystick.dir/src/timing.c.i
-.PHONY : src/timing.c.i
-
-src/timing.s: src/timing.c.s
-.PHONY : src/timing.s
-
-# target to generate assembly for a file
-src/timing.c.s:
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/Joystick.dir/build.make app/CMakeFiles/Joystick.dir/src/timing.c.s
-.PHONY : src/timing.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -217,9 +193,6 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/timing.o"
-	@echo "... src/timing.i"
-	@echo "... src/timing.s"
 .PHONY : help
 
 

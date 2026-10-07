@@ -5,7 +5,7 @@
 #include<stdio.h>
 #include<fcntl.h>
 
-FILE* init_led(char * led_path);
+FILE* init_led(char * led_brightness , char* led_trigger);
 int write_to_led( FILE* led_path , char* value);
 int close_led(FILE* led_path);
 
