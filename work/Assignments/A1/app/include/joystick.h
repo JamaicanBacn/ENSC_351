@@ -2,7 +2,7 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 
-#define DEADZONE 0.05f // 5 percent deadzone 
+#define DEADZONE 0.2f // 20 percent deadzone 
 
 #include <stdint.h>
 #include <stdbool.h>

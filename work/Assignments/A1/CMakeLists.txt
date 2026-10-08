@@ -4,6 +4,13 @@ project( joystick VERSION 1.0 DESCRIPTION "Joystick" LANGUAGES C)
 
 # Compiler options (inherited by sub-folders)
 set(CMAKE_C_STANDARD 11)
+
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR aarch64)
+
+set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
+set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
+
 add_compile_options(-Wall -Wpedantic -Wextra)
 add_compile_options(-fdiagnostics-color)
 

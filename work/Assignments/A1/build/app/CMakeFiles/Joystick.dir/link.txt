@@ -1,1 +1,1 @@
-/usr/bin/cc -fsanitize=address -pthread -Wl,--dependency-file=CMakeFiles/Joystick.dir/link.d CMakeFiles/Joystick.dir/src/joystick.c.o CMakeFiles/Joystick.dir/src/main.c.o -o Joystick  ../hal/libhal.a -lgpiod
+aarch64-linux-gnu-gcc -fsanitize=address -pthread -Wl,--dependency-file=CMakeFiles/Joystick.dir/link.d CMakeFiles/Joystick.dir/src/joystick.c.o CMakeFiles/Joystick.dir/src/main.c.o -o Joystick  ../hal/libhal.a -lgpiod

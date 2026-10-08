@@ -76,57 +76,57 @@ hal/CMakeFiles/hal.dir/src/LED.c.o: hal/CMakeFiles/hal.dir/flags.make
 hal/CMakeFiles/hal.dir/src/LED.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c
 hal/CMakeFiles/hal.dir/src/LED.c.o: hal/CMakeFiles/hal.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object hal/CMakeFiles/hal.dir/src/LED.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/LED.c.o -MF CMakeFiles/hal.dir/src/LED.c.o.d -o CMakeFiles/hal.dir/src/LED.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/LED.c.o -MF CMakeFiles/hal.dir/src/LED.c.o.d -o CMakeFiles/hal.dir/src/LED.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c
 
 hal/CMakeFiles/hal.dir/src/LED.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/hal.dir/src/LED.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c > CMakeFiles/hal.dir/src/LED.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c > CMakeFiles/hal.dir/src/LED.c.i
 
 hal/CMakeFiles/hal.dir/src/LED.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/hal.dir/src/LED.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c -o CMakeFiles/hal.dir/src/LED.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/LED.c -o CMakeFiles/hal.dir/src/LED.c.s
 
 hal/CMakeFiles/hal.dir/src/gpio.c.o: hal/CMakeFiles/hal.dir/flags.make
 hal/CMakeFiles/hal.dir/src/gpio.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c
 hal/CMakeFiles/hal.dir/src/gpio.c.o: hal/CMakeFiles/hal.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object hal/CMakeFiles/hal.dir/src/gpio.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/gpio.c.o -MF CMakeFiles/hal.dir/src/gpio.c.o.d -o CMakeFiles/hal.dir/src/gpio.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/gpio.c.o -MF CMakeFiles/hal.dir/src/gpio.c.o.d -o CMakeFiles/hal.dir/src/gpio.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c
 
 hal/CMakeFiles/hal.dir/src/gpio.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/hal.dir/src/gpio.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c > CMakeFiles/hal.dir/src/gpio.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c > CMakeFiles/hal.dir/src/gpio.c.i
 
 hal/CMakeFiles/hal.dir/src/gpio.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/hal.dir/src/gpio.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c -o CMakeFiles/hal.dir/src/gpio.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/gpio.c -o CMakeFiles/hal.dir/src/gpio.c.s
 
 hal/CMakeFiles/hal.dir/src/m3208.c.o: hal/CMakeFiles/hal.dir/flags.make
 hal/CMakeFiles/hal.dir/src/m3208.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c
 hal/CMakeFiles/hal.dir/src/m3208.c.o: hal/CMakeFiles/hal.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object hal/CMakeFiles/hal.dir/src/m3208.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/m3208.c.o -MF CMakeFiles/hal.dir/src/m3208.c.o.d -o CMakeFiles/hal.dir/src/m3208.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/m3208.c.o -MF CMakeFiles/hal.dir/src/m3208.c.o.d -o CMakeFiles/hal.dir/src/m3208.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c
 
 hal/CMakeFiles/hal.dir/src/m3208.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/hal.dir/src/m3208.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c > CMakeFiles/hal.dir/src/m3208.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c > CMakeFiles/hal.dir/src/m3208.c.i
 
 hal/CMakeFiles/hal.dir/src/m3208.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/hal.dir/src/m3208.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c -o CMakeFiles/hal.dir/src/m3208.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/m3208.c -o CMakeFiles/hal.dir/src/m3208.c.s
 
 hal/CMakeFiles/hal.dir/src/spi.c.o: hal/CMakeFiles/hal.dir/flags.make
 hal/CMakeFiles/hal.dir/src/spi.c.o: /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c
 hal/CMakeFiles/hal.dir/src/spi.c.o: hal/CMakeFiles/hal.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/maximus/repositories/ENSC_351/work/Assignments/A1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object hal/CMakeFiles/hal.dir/src/spi.c.o"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/spi.c.o -MF CMakeFiles/hal.dir/src/spi.c.o.d -o CMakeFiles/hal.dir/src/spi.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT hal/CMakeFiles/hal.dir/src/spi.c.o -MF CMakeFiles/hal.dir/src/spi.c.o.d -o CMakeFiles/hal.dir/src/spi.c.o -c /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c
 
 hal/CMakeFiles/hal.dir/src/spi.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/hal.dir/src/spi.c.i"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c > CMakeFiles/hal.dir/src/spi.c.i
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c > CMakeFiles/hal.dir/src/spi.c.i
 
 hal/CMakeFiles/hal.dir/src/spi.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/hal.dir/src/spi.c.s"
-	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c -o CMakeFiles/hal.dir/src/spi.c.s
+	cd /home/maximus/repositories/ENSC_351/work/Assignments/A1/build/hal && aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/maximus/repositories/ENSC_351/work/Assignments/A1/hal/src/spi.c -o CMakeFiles/hal.dir/src/spi.c.s
 
 # Object files for target hal
 hal_OBJECTS = \

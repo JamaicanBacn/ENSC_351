@@ -19,18 +19,24 @@ FILE* init_led(char * led_brightness , char* led_trigger)
         return NULL;
     }
 
+    fclose(LED_trigger_path);
+
     return LED_brightness_path;
 }
 
 int write_to_led( FILE* led_path , char* value )
 {
-    int charWritten = fprintf(led_path , value);
+    fseek( led_path , 0 , SEEK_SET);
+    int charWritten = fprintf(led_path , "%s" , value);
+
 
     if( charWritten <= 0 )
     {
         perror("LED WRITE FAILED");
         return -1;
     }
+
+    fflush(led_path);
 
     return 0;
 }
