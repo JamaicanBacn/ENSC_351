@@ -31,6 +31,15 @@
 static JoyStick joystick = {0};
 static FILE* LED_GREEN = NULL;
 static FILE* LED_RED   = NULL; 
+static float Fastest_time = 0;
+
+enum {
+    UP       = 1,
+    DOWN     = 2,
+    LEFT     = 3,
+    RIGHT    = 4,
+    NO_INPUT = 5
+} Directions;
 
 void print_introduction(void);
 void gameloop( void );
@@ -98,10 +107,18 @@ void gameloop( )
     */ 
     print_introduction();
 
+    /*
     while(1)
     {
         JoyStick_Read(&joystick);
         printf( "X_pos : %f , Y_pos : %f , Sel : %d UpDown %d\n" , joystick.x_pos , joystick.y_pos , joystick.sel , Up_or_down());
+    }
+    */
+
+
+    while(1)
+    {
+        
     }
 }
 
@@ -123,11 +140,11 @@ int check_start_position()
 {
     JoyStick_Read(&joystick);
 
-    if( fabs(joystick.x_pos) > DEADZONE || fabs(joystick.y_pos) > DEADZONE)
+    if( fabs(joystick.y_pos) > DEADZONE)
     {
         printf("Return joystick to center to begin");
 
-        while( joystick.x_pos > DEADZONE || joystick.y_pos > DEADZONE)
+        while( fabs(joystick.y_pos) > DEADZONE)
         {
             JoyStick_Read(&joystick);
         }
@@ -139,7 +156,7 @@ int check_start_position()
 int check_ready_position()
 {
     JoyStick_Read(&joystick);
-    if( fabs(joystick.x_pos) > DEADZONE || fabs(joystick.y_pos) > DEADZONE)
+    if( fabs(joystick.y_pos) > DEADZONE)
     {
         printf( "Too soon");
         return -1;
@@ -184,7 +201,7 @@ int begin_game()
 
     get_ready_led();
     unsigned long long Delay = ( rand() % 3000 ) + 500 ; 
-    bool Up = Delay % 2 == 0;
+    int correct_direction = (Delay % 2) + 1 ; // 1 or 2
     sleepForMs( Delay );
 
     if( check_ready_position() == -1 )
@@ -192,7 +209,7 @@ int begin_game()
         return -1; // moved the joystick too early
     }
 
-    if( Up )
+    if( correct_direction == UP )
     {
         printf( "UP" );
         write_to_led(LED_GREEN , "1");
@@ -205,29 +222,75 @@ int begin_game()
 
     unsigned long long start_time = getTimeInMs();
     unsigned long long end_time = start_time;
-    int input;
+    float reaction_time;
+    int input = 0;
 
     while( !input && (start_time - end_time) < 5000 )
     {
         JoyStick_Read(&joystick);
         end_time = getTimeInMs();
-        input = Up_or_down();
+        input = direction();
     
     }
 
+    reaction_time = (float)(start_time - end_time)/1000;
 
-    return end_time - start_time;
+    switch( input )
+    {
+        case( UP ) :
+            if( correct_direction == UP )
+            {
+                printf("correct you win ");
+                Fastest_time = fmax(Fastest_time , reaction_time);
+            }
+            else
+            {
+                printf("incorrect you lose");
+            }
+            break;
+
+        case( DOWN ) :
+            if( correct_direction == DOWN)
+            {
+                printf("correct you win");
+                Fastest_time = fmax(Fastest_time , reaction_time);
+            }
+            else
+            {
+                printf("incorrect you lose");
+                return 0;
+            }
+            break;
+
+        case(NO_INPUT):
+            printf("Did not receive input , exiting program");
+            exit(1);
+
+        case(LEFT):
+        case(RIGHT):
+            printf("invalid input exiting the program");
+            exit(1);
+        
+
+    }
+
+
+    return (Fastest_time == reaction_time);
 }
 
-// 1 -> UP , -1 -> DOWN , 0 -> no input
-int Up_or_down()
+int direction()
 {
     float prev_y = joystick.y_pos; // so one time errors dont ruin
+    float prev_x = joystick.x_pos;
 
     JoyStick_Read(&joystick);
 
-    if( joystick.y_pos > DEADZONE && prev_y > DEADZONE) return 1;
-    if( joystick.y_pos < -DEADZONE && prev_y < -DEADZONE) return -1;
+    // check the left and right invaid inputs
+    if( joystick.x_pos > DEADZONE && prev_x > DEADZONE) return RIGHT;
+    if( joystick.x_pos < -DEADZONE && prev_x < -DEADZONE) return LEFT;
+
+    if( joystick.y_pos > DEADZONE && prev_y > DEADZONE) return UP;
+    if( joystick.y_pos < -DEADZONE && prev_y < -DEADZONE) return DOWN;
 
     return 0;
 }
