@@ -1,0 +1,177 @@
+maximus@debian:~$ ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:fe:5f:6b brd ff:ff:ff:ff:ff:ff
+    altname enp2s1
+    altname enx000c29fe5f6b
+    inet 192.168.175.128/24 brd 192.168.175.255 scope global dynamic noprefixroute ens33
+       valid_lft 1460sec preferred_lft 1460sec
+    inet6 fe80::c7bb:147:28ef:967b/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+13: enx1cba8ca2ed6a: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 1c:ba:8c:a2:ed:6a brd ff:ff:ff:ff:ff:ff
+    inet 192.168.7.1/24 brd 192.168.7.255 scope global dynamic noprefixroute enx1cba8ca2ed6a
+       valid_lft 859sec preferred_lft 859sec
+    inet6 fe80::1eba:8cff:fea2:ed6a/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+maximus@debian:~$ ping 192.168.7.2
+PING 192.168.7.2 (192.168.7.2) 56(84) bytes of data.
+64 bytes from 192.168.7.2: icmp_seq=1 ttl=64 time=2.58 ms
+64 bytes from 192.168.7.2: icmp_seq=2 ttl=64 time=4.11 ms
+64 bytes from 192.168.7.2: icmp_seq=3 ttl=64 time=3.50 ms
+^C
+--- 192.168.7.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 2.581/3.396/4.105/0.626 ms
+maximus@debian:~$ ssh debian@192.168.7.2
+Debian GNU/Linux 12
+
+BeagleBoard.org Debian Bookworm Minimal Image 2025-05-21
+Support: https://bbb.io/debian
+default username is [debian] with a one time password of [temppwd]
+
+debian@192.168.7.2's password: 
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Oct  6 23:12:07 2026 from 192.168.7.1
+debian@BeagleBone:~$ ./internetToTarget.sh 
+[sudo] password for debian: 
+SIOCADDRT: File exists
+debian@BeagleBone:~$ ./mountNFS.sh 
+mount: (hint) your fstab has been modified, but systemd still uses
+       the old version; use 'systemctl daemon-reload' to reload.
+debian@BeagleBone:~$ cd /mnt/remote
+debian@BeagleBone:/mnt/remote$ ls
+hello_world  helloworld_target  IR_test  Joystick
+debian@BeagleBone:/mnt/remote$ sudo ./Joystick 
+ Rules : You will receive a getReady message , after a few moments a LED will Turn on. 
+         Follwoing the led a direction will be displayed on screen.
+         Press the joystick in that direction as fast as possible.
+                       Press down the joystick to begin                
+GET READY
+
+
+DOWN
+
+correct you win
+WOOOOOAAAAHHHH NEW RECORD OF 0.311000
+GET READY
+
+
+UP
+
+correct you win
+Fastest : 0.311000    , your time 0.490000
+GET READY
+
+
+DOWN
+
+correct you win
+Fastest : 0.311000    , your time 0.569000
+GET READY
+
+
+DOWN
+
+incorrect you lose
+Fastest : 0.311000    , your time 0.661000
+GET READY
+
+
+DOWN
+
+Did not receive input , exiting program
+debian@BeagleBone:/mnt/remote$ sudo ./Joystick 
+ Rules : You will receive a getReady message , after a few moments a LED will Turn on. 
+         Follwoing the led a direction will be displayed on screen.
+         Press the joystick in that direction as fast as possible.
+                       Press down the joystick to begin                
+GET READY
+
+
+DOWN
+
+correct you win
+WOOOOOAAAAHHHH NEW RECORD OF 1.897000
+Too soon
+try again
+Too soon
+try again
+Return joystick to center to begin
+Too soon
+try again
+Return joystick to center to begin
+GET READY
+
+
+DOWN
+
+incorrect you lose
+Fastest : 1.897000    , your time 0.531000
+GET READY
+
+
+DOWN
+
+invalid input exiting the program
+debian@BeagleBone:/mnt/remote$ ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 56:28:89:40:19:1b brd ff:ff:ff:ff:ff:ff
+3: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether 04:25:e8:3c:9f:05 brd ff:ff:ff:ff:ff:ff
+4: usb0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 1c:ba:8c:a2:ed:6b brd ff:ff:ff:ff:ff:ff
+    inet 192.168.7.2/24 brd 192.168.7.255 scope global usb0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1eba:8cff:fea2:ed6b/64 scope link 
+       valid_lft forever preferred_lft forever
+5: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether 10:ca:bf:da:41:90 brd ff:ff:ff:ff:ff:ff
+6: SoftAp0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether 12:ca:bf:da:41:91 brd ff:ff:ff:ff:ff:ff
+debian@BeagleBone:/mnt/remote$ ping 192.168.7.1
+PING 192.168.7.1 (192.168.7.1) 56(84) bytes of data.
+64 bytes from 192.168.7.1: icmp_seq=1 ttl=64 time=2.26 ms
+64 bytes from 192.168.7.1: icmp_seq=2 ttl=64 time=2.65 ms
+64 bytes from 192.168.7.1: icmp_seq=3 ttl=64 time=6.04 ms
+^C
+--- 192.168.7.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 2.256/3.645/6.035/1.696 ms
+debian@BeagleBone:/mnt/remote$ ping google.ca
+PING google.ca (142.251.34.195) 56(84) bytes of data.
+64 bytes from pnseab-ab-in-f3.1e100.net (142.251.34.195): icmp_seq=1 ttl=127 time=34.1 ms
+64 bytes from pnseab-ab-in-f3.1e100.net (142.251.34.195): icmp_seq=2 ttl=127 time=25.5 ms
+64 bytes from qro02s27-in-f3.1e100.net (142.251.34.195): icmp_seq=3 ttl=127 time=29.2 ms
+64 bytes from qro02s27-in-f3.1e100.net (142.251.34.195): icmp_seq=4 ttl=127 time=29.7 ms
+^C
+--- google.ca ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 25.464/29.615/34.142/3.078 ms
+debian@BeagleBone:/mnt/remote$ cat /boot/firmware/ID.txt 
+BeagleBoard.org Debian Bookworm Minimal Image 2025-05-21
+debian@BeagleBone:/mnt/remote$ cat /proc/version 
+Linux version 6.1.83-ti-arm64-r74 (voodoo@rpi5b8g-65) (gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1bookworm SMP PREEMPT_DYNAMIC Thu May  7 19:07:13 UTC 2026
+debian@BeagleBone:/mnt/remote$ cat /proc/uptime 
+10021.59 39686.17
+debian@BeagleBone:/mnt/remote$ exit
+logout
+Connection to 192.168.7.2 closed.
+maximus@debian:~$ 
