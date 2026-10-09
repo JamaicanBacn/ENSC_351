@@ -8,6 +8,11 @@ Joystick: \
   CMakeFiles/Joystick.dir/src/main.c.o \
   ../hal/libhal.a \
   /lib/aarch64-linux-gnu/libgpiod.so \
+  /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so \
+  /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so \
+  /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so \
+  /usr/aarch64-linux-gnu/lib/libm.so.6 \
+  /usr/aarch64-linux-gnu/lib/libmvec.so.1 \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/libgcc.a \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/libgcc_s.so \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/libgcc_s.so \
@@ -29,7 +34,6 @@ Joystick: \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/libgcc.a \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/crtendS.o \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/crtn.o \
-  /lib/aarch64-linux-gnu/libm.so.6 \
   /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libgcc_s.so.1 \
   /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1
 
@@ -50,6 +54,16 @@ CMakeFiles/Joystick.dir/src/main.c.o:
 ../hal/libhal.a:
 
 /lib/aarch64-linux-gnu/libgpiod.so:
+
+/usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so:
+
+/usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so:
+
+/usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libm.so:
+
+/usr/aarch64-linux-gnu/lib/libm.so.6:
+
+/usr/aarch64-linux-gnu/lib/libmvec.so.1:
 
 /usr/lib/gcc-cross/aarch64-linux-gnu/14/libgcc.a:
 
@@ -92,8 +106,6 @@ CMakeFiles/Joystick.dir/src/main.c.o:
 /usr/lib/gcc-cross/aarch64-linux-gnu/14/crtendS.o:
 
 /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/crtn.o:
-
-/lib/aarch64-linux-gnu/libm.so.6:
 
 /usr/lib/gcc-cross/aarch64-linux-gnu/14/../../../../aarch64-linux-gnu/lib/../lib/libgcc_s.so.1:
 

@@ -31,9 +31,12 @@
 static JoyStick joystick = {0};
 static FILE* LED_GREEN = NULL;
 static FILE* LED_RED   = NULL; 
-static float Fastest_time = 0;
+
+static float Fastest_time = 5;
+static float Current_time = 0;
 
 enum {
+    WAITING  = 0,
     UP       = 1,
     DOWN     = 2,
     LEFT     = 3,
@@ -41,9 +44,22 @@ enum {
     NO_INPUT = 5
 } Directions;
 
+enum {
+    RECORD,
+    SLOWER,
+    TOO_FAST
+
+} game_result;
+
 void print_introduction(void);
+void winner_led( FILE* led_path );
+
 void gameloop( void );
 void get_ready_led( void );
+int direction(void);
+int begin_game();
+
+void shut_down( void );
 
 static long long getTimeInMs(void)
 {
@@ -115,10 +131,25 @@ void gameloop( )
     }
     */
 
+    int result = 0;
+
 
     while(1)
     {
-        
+        result = begin_game();
+
+        if( result == RECORD )
+        {
+            printf("WOOOOOAAAAHHHH NEW RECORD OF %f\n" , Fastest_time);
+        }
+        else if( result == SLOWER)
+        {
+            printf("Fastest : %f    , your time %f\n" , Fastest_time , Current_time);
+        }
+        else if( result == TOO_FAST)
+        {
+            printf("try again\n");
+        }
     }
 }
 
@@ -136,21 +167,15 @@ void print_introduction( void )
  
 }
 
-int check_start_position()
+void check_start_position()
 {
     JoyStick_Read(&joystick);
 
     if( fabs(joystick.y_pos) > DEADZONE)
     {
-        printf("Return joystick to center to begin");
-
-        while( fabs(joystick.y_pos) > DEADZONE)
-        {
-            JoyStick_Read(&joystick);
-        }
+        printf("Return joystick to center to begin\n");
     }
 
-    return 1;
 }
 
 int check_ready_position()
@@ -158,7 +183,7 @@ int check_ready_position()
     JoyStick_Read(&joystick);
     if( fabs(joystick.y_pos) > DEADZONE)
     {
-        printf( "Too soon");
+        printf( "Too soon\n");
         return -1;
     }
 
@@ -183,6 +208,20 @@ void get_ready_led( void )
     write_to_led(LED_RED    , "0");
 }
 
+void winner_led( FILE* led_path )
+{
+    write_to_led(LED_GREEN , "0");
+    write_to_led(LED_RED,    "0");
+
+    for( int i = 0; i < 5 ; i++ ){
+        
+        write_to_led( led_path , "1");
+        sleepForMs(100);
+        write_to_led( led_path ,  "0");
+        sleepForMs(100);
+    }
+}
+
 int begin_game()
 { 
     /*
@@ -199,33 +238,41 @@ int begin_game()
     
     */ 
 
+    sleepForMs(1000);
+
+    check_start_position();
     get_ready_led();
+
     unsigned long long Delay = ( rand() % 3000 ) + 500 ; 
     int correct_direction = (Delay % 2) + 1 ; // 1 or 2
-    sleepForMs( Delay );
+    sleepForMs( 500 );
 
     if( check_ready_position() == -1 )
     {
-        return -1; // moved the joystick too early
+        return TOO_FAST;
     }
+
+    printf("GET READY\n");
+
+    sleepForMs( Delay );
 
     if( correct_direction == UP )
     {
-        printf( "UP" );
+        printf( "\n\nUP\n\n" );
         write_to_led(LED_GREEN , "1");
     }
     else
     {
-        printf("DOWN");
+        printf("\n\nDOWN\n\n");
         write_to_led(LED_RED , "1");
     }
 
+
     unsigned long long start_time = getTimeInMs();
     unsigned long long end_time = start_time;
-    float reaction_time;
-    int input = 0;
+    int input = WAITING;
 
-    while( !input && (start_time - end_time) < 5000 )
+    while( input == WAITING && (end_time - start_time) < 5000 )
     {
         JoyStick_Read(&joystick);
         end_time = getTimeInMs();
@@ -233,49 +280,58 @@ int begin_game()
     
     }
 
-    reaction_time = (float)(start_time - end_time)/1000;
+    Current_time = (float)(end_time - start_time)/1000;
 
     switch( input )
     {
         case( UP ) :
+
             if( correct_direction == UP )
             {
-                printf("correct you win ");
-                Fastest_time = fmax(Fastest_time , reaction_time);
+                printf("correct you win\n");
+                Fastest_time = fmin(Fastest_time , Current_time);
+                winner_led(LED_GREEN);
             }
             else
             {
-                printf("incorrect you lose");
+                printf("incorrect you lose\n");
+                winner_led(LED_RED);
+                return SLOWER;
             }
             break;
 
         case( DOWN ) :
+
             if( correct_direction == DOWN)
             {
-                printf("correct you win");
-                Fastest_time = fmax(Fastest_time , reaction_time);
+                printf("correct you win\n");
+                Fastest_time = fmin(Fastest_time , Current_time);
+                winner_led(LED_GREEN);
             }
             else
             {
-                printf("incorrect you lose");
-                return 0;
+                printf("incorrect you lose\n");
+                winner_led(LED_RED);
+                return SLOWER;
             }
             break;
 
-        case(NO_INPUT):
-            printf("Did not receive input , exiting program");
+        case(WAITING):
+            printf("Did not receive input , exiting program\n");
+            shut_down();
             exit(1);
 
         case(LEFT):
         case(RIGHT):
-            printf("invalid input exiting the program");
+            printf("invalid input exiting the program\n");
+            shut_down();
             exit(1);
         
 
     }
 
 
-    return (Fastest_time == reaction_time);
+    return (Current_time <= Fastest_time) ? RECORD : SLOWER;
 }
 
 int direction()
@@ -292,5 +348,14 @@ int direction()
     if( joystick.y_pos > DEADZONE && prev_y > DEADZONE) return UP;
     if( joystick.y_pos < -DEADZONE && prev_y < -DEADZONE) return DOWN;
 
-    return 0;
+    return WAITING;
+}
+
+void shut_down(void)
+{
+    write_to_led(LED_GREEN , "0");
+    write_to_led(LED_RED , "0");
+
+    spi_close();
+
 }
