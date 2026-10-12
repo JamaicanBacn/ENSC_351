@@ -247,11 +247,6 @@ int begin_game()
     int correct_direction = (Delay % 2) + 1 ; // 1 or 2
     sleepForMs( 500 );
 
-    if( check_ready_position() == -1 )
-    {
-        return TOO_FAST;
-    }
-
     printf("GET READY\n");
 
     sleepForMs( Delay );
@@ -271,6 +266,11 @@ int begin_game()
     unsigned long long start_time = getTimeInMs();
     unsigned long long end_time = start_time;
     int input = WAITING;
+
+    if( check_ready_position() == -1 )
+    {
+        return TOO_FAST;
+    }
 
     while( input == WAITING && (end_time - start_time) < 5000 )
     {
