@@ -1,0 +1,8 @@
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/CMakeFiles/rebuild_cache.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/hal/CMakeFiles/hal.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/hal/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/hal/CMakeFiles/rebuild_cache.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/app/CMakeFiles/IR_test.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/app/CMakeFiles/edit_cache.dir
+/home/maximus/repositories/ENSC_351/work/Scratch_work/IR_Tester/build/app/CMakeFiles/rebuild_cache.dir

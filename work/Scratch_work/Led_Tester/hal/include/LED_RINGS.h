@@ -4,17 +4,23 @@
 
 #include <unistd.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "USB.h"
 
-#define RING_COUNT 2
+#define RING_COUNT 1
 
-#define LED_PACKET_SIZE sizeof(LED_PACKET);
+#define LED_SIZE sizeof(LED)
+#define LED_PACKET_SIZE sizeof(LED_PACKET) 
 #define LED_USB_CMD     0x00
+#define LED_START       0xAA
 
 // Some base colours for RGB STRUCT
-#define RED     { 255 , 0   , 0     }
-#define BLUE    { 0   , 255 , 0     }
-#define GREEN   { 0   , 0   , 255   }
+#define RED     (RGB){ 255 , 0   , 0     }
+#define GREEN   (RGB){ 0   , 255 , 0     }
+#define BLUE    (RGB){ 0   , 0   , 255   }
+
+
+#define LED_PRINT_FORMAT " fd : %d\n USB_START : %d\n USB_CMD : %d\n USB_SIZE : %d\n RING : %d\n RED : %d\n GREEN :  %d\n BLUE : %d\n"
 
 
 /*
@@ -38,12 +44,20 @@
 */
 
 // Contains the wrie information for the LED
+
 typedef struct 
 {
-    uint8_t RING_NUMBER;
+
     uint8_t R;
     uint8_t G;
     uint8_t B;
+
+} RGB;
+
+typedef struct 
+{
+    uint8_t RING_NUMBER;
+    RGB rgb;
 
 } LED;
 
@@ -59,12 +73,13 @@ typedef struct
 typedef struct
 {
     LED_PACKET packet;
-    int usb_fd
+    int usb_fd;
 
 } LED_STRUCT;
 
-
-
+void LED_write_debug(LED_STRUCT *led_s);
+void print_led_packet( LED_STRUCT LED_S );
+int LED_set_colour( LED_STRUCT led_s , uint8_t ring , RGB rgb);
 LED_STRUCT LED_init( char* usb_path );
 int LED_write( LED_STRUCT led_struct);
 
