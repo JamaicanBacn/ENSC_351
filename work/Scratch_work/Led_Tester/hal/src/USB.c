@@ -75,3 +75,23 @@ int USB_write( int usb_fd  , void* packet , int packet_size)
 {
     return write( usb_fd , packet , packet_size );
 }
+
+uint64_t USB_read( int usb_fd )
+{
+    long long buffer = 0;
+
+    ssize_t bytes = read(usb_fd, &buffer, 8);
+
+    if (bytes < 0) {
+        perror("USB read failed");
+        return -1;
+    }
+
+    if (bytes == 0) {
+        printf("USB read timed out\n");
+        return -1;
+    }
+
+    return buffer;
+
+}

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libhal.a CMakeFiles/hal.dir/src/IR_receiver.c.o CMakeFiles/hal.dir/src/gpio.c.o
+/usr/bin/ranlib libhal.a
