@@ -1,1 +1,0 @@
-aarch64-linux-gnu-gcc -fsanitize=address -pthread -Wl,--dependency-file=CMakeFiles/IR_test.dir/link.d CMakeFiles/IR_test.dir/src/main.c.o -o IR_test  ../hal/libhal.a -lgpiod
