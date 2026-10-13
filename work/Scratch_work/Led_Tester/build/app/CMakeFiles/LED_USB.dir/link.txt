@@ -1,1 +1,0 @@
-aarch64-linux-gnu-gcc -fsanitize=address -pthread -Wl,--dependency-file=CMakeFiles/LED_USB.dir/link.d CMakeFiles/LED_USB.dir/src/main.c.o -o LED_USB  ../hal/libhal.a -lgpiod -lm
