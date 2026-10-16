@@ -17,7 +17,7 @@ typedef struct
 
 } Rotary_encoder;
 
-Rotary_encoder init_Rotary_encoder( char* gpio_path1 , int* offsets );
+Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip  , int offsets[2] );
 
 void read_rotary( Rotary_encoder* r );
 

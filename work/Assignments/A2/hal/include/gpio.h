@@ -6,57 +6,64 @@
 #include <stdint.h>
 #include <gpiod.h>
 
-typedef enum{
-    GPIO_11_OFFSET,
+#define GPIOCHIP_0_PATH "/dev/gpiochip0"
+#define GPIOCHIP_1_PATH "/dev/gpiochip1"
+#define GPIOCHIP_2_PATH "/dev/gpiochip2"
 
-} GPIO_CHIP1_OFFSETS;
+typedef struct{
+    char* gpio_path;
+    struct gpiod_chip* chip;
+    struct gpiod_line_request* request;
+
+    uint32_t* offsets;
+
+} GPIOCHIP;
+
+#include <stdint.h>
 
 // GPIOCHIP0
-typedef enum {
-    GPIO_2_OFFSET  = 18,
-    GPIO_3_OFFSET  = 17,
-    GPIO_7_OFFSET  = 9,
-    GPIO_8_OFFSET  = 0,
-    GPIO_9_OFFSET  = 4,
-    GPIO_10_OFFSET = 3,
-    GPIO_11_OFFSET = 2,
-    GPIO_23_OFFSET = 7,
-    GPIO_24_OFFSET = 10
-
+typedef struct {
+    uint32_t GPIO_2_OFFSET;
+    uint32_t GPIO_3_OFFSET;
+    uint32_t GPIO_7_OFFSET;
+    uint32_t GPIO_8_OFFSET;
+    uint32_t GPIO_9_OFFSET;
+    uint32_t GPIO_10_OFFSET;
+    uint32_t GPIO_11_OFFSET;
+    uint32_t GPIO_23_OFFSET;
+    uint32_t GPIO_24_OFFSET;
 } GPIOCHIP0_OFFSETS;
 
 
 // GPIOCHIP1
-typedef enum {
-    GPIO_4_OFFSET  = 38,
-    GPIO_22_OFFSET = 41,
-    GPIO_25_OFFSET = 42,
-    GPIO_26_OFFSET = 36,
-    GPIO_27_OFFSET = 33
-
+typedef struct {
+    uint32_t GPIO_4_OFFSET;
+    uint32_t GPIO_22_OFFSET;
+    uint32_t GPIO_25_OFFSET;
+    uint32_t GPIO_26_OFFSET;
+    uint32_t GPIO_27_OFFSET;
 } GPIOCHIP1_OFFSETS;
 
 
 // GPIOCHIP2
-typedef enum {
-    GPIO_5_OFFSET  = 15,
-    GPIO_6_OFFSET  = 17,
-    GPIO_12_OFFSET = 16,
-    GPIO_13_OFFSET = 18,
-    GPIO_14_OFFSET = 14,
-    GPIO_15_OFFSET = 13,
-    GPIO_16_OFFSET = 7,
-    GPIO_17_OFFSET = 8,
-    GPIO_18_OFFSET = 11,
-    GPIO_19_OFFSET = 12,
-    GPIO_20_OFFSET = 10,
-    GPIO_21_OFFSET = 9
-
+typedef struct {
+    uint32_t GPIO_5_OFFSET;
+    uint32_t GPIO_6_OFFSET;
+    uint32_t GPIO_12_OFFSET;
+    uint32_t GPIO_13_OFFSET;
+    uint32_t GPIO_14_OFFSET;
+    uint32_t GPIO_15_OFFSET;
+    uint32_t GPIO_16_OFFSET;
+    uint32_t GPIO_17_OFFSET;
+    uint32_t GPIO_18_OFFSET;
+    uint32_t GPIO_19_OFFSET;
+    uint32_t GPIO_20_OFFSET;
+    uint32_t GPIO_21_OFFSET;
 } GPIOCHIP2_OFFSETS;
 
 
-int gpio_init( const char* chip_path , uint64_t* offsets , int offset_count);
-int gpio_read( uint64_t offset );
+int gpio_init( GPIOCHIP* gp_chip, uint32_t* offsets , int offset_count);
+int gpio_read( uint32_t offset , GPIOCHIP gp_chip );
 int gpio_close( void );
 
 #endif
