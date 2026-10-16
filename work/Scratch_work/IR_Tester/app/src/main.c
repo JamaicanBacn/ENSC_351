@@ -18,5 +18,7 @@ int main()
 
     }
 
+    gpio_close();
+
     return 0;
 }
