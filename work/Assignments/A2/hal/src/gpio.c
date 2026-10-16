@@ -3,15 +3,13 @@
 
 static struct gpiod_chip* chip = NULL; // what gpio chip is being used
 static struct gpiod_line_request* request = NULL; // line request
-static unsigned int gpio_offset; // line offset in the gpio file
 
-int gpio_init( const char* chip_path , unsigned int offset)
+int gpio_init( const char* chip_path , uint64_t* offsets , int offset_count)
 {
     struct gpiod_line_settings*     settings = NULL;
     struct gpiod_request_config *   request_config = NULL;
     struct gpiod_line_config *      line_config = NULL;
 
-    gpio_offset = offset;
 
     chip = gpiod_chip_open(chip_path); // check if the gpio acess 
 
@@ -47,8 +45,8 @@ int gpio_init( const char* chip_path , unsigned int offset)
 
     if( gpiod_line_config_add_line_settings(
         line_config,
-        &gpio_offset,
-        1,
+        offsets,
+        offset_count,
         settings) < 0 )
         {
             perror(" GPIOD LINE CONFIG ADD LINE SETTINGS FAILURE");
@@ -74,11 +72,11 @@ int gpio_init( const char* chip_path , unsigned int offset)
 
 }
 
-int gpio_read( void )
+int gpio_read( uint64_t offset)
 {
     enum gpiod_line_value value;
 
-    value = gpiod_line_request_get_value( request , gpio_offset);
+    value = gpiod_line_request_get_value( request , offset);
     
 
     if( value == GPIOD_LINE_VALUE_ERROR )
