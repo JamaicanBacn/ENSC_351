@@ -5,7 +5,7 @@
 #include "gpio.h"
 #include <stdbool.h>
 
-typedef struct gu
+typedef struct 
 {
     int gpio_offsets[2];
 
