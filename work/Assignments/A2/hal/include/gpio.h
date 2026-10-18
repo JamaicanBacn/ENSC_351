@@ -63,7 +63,7 @@ typedef struct {
 
 
 int gpio_init( GPIOCHIP* gp_chip, uint32_t* offsets , int offset_count);
-int gpio_read( uint32_t offset , GPIOCHIP gp_chip );
+int gpio_read( uint32_t offset , GPIOCHIP* gp_chip );
 int gpio_close( void );
 
 #endif
