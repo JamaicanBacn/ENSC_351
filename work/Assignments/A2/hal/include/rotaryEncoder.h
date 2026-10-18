@@ -5,13 +5,6 @@
 #include "gpio.h"
 #include <stdbool.h>
 
-typedef enum : uint8_t {
-    S0,
-    S1,
-    S2,
-    S3
-
-} Rotary_states;
 
 typedef struct 
 {

@@ -7,7 +7,8 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
 {
     Rotary_encoder r_enc = {
         .gp_chip = gp_chip,
-        .gpio_offsets = offsets,
+        .gpio_offsets[0] = offsets[0],
+        .gpio_offsets[1] = offsets[1],
         .sel = 0
     };
 
