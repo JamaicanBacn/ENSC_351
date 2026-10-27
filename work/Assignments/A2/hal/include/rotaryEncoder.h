@@ -5,13 +5,17 @@
 #include "gpio.h"
 #include <stdbool.h>
 
+
 typedef struct 
 {
     int gpio_offsets[2];
+    GPIOCHIP* gp_chip;
 
-    bool clk;
-    bool DT;
-    bool sel;
+    uint8_t clk : 1;
+    uint8_t DT  : 1; 
+    uint8_t sel : 1;
+
+    uint8_t prev_state : 2;
 
     int position;
 

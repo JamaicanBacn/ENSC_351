@@ -54,13 +54,6 @@ int main()
 
     gpio_init( &gpio_chip_2 , offsets , 2);
 
-    while( 1 )
-    {
-        int gpio_18_value = gpio_read( gpiochip2_offsets.GPIO_18_OFFSET , gpio_chip_2);
-        int gpio_15_value = gpio_read( gpiochip2_offsets.GPIO_15_OFFSET , gpio_chip_2);
-        printf("GPIO18 : %d GPIO15 : %d\n" , gpio_18_value , gpio_15_value);
-    }
-
     return 0;
 }
 
