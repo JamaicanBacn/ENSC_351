@@ -3,7 +3,7 @@
 
 #include "rotaryEncoder.h"
 
-Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
+Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
 {
     Rotary_encoder r_enc = {
         .gp_chip = gp_chip,
@@ -15,6 +15,9 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
     // get the starting position , set postion to 0 to not count init
     read_rotary( &r_enc );
     r_enc.position = 0;
+    r_enc.micro_pos = 0;
+    r_enc.start_state = r_enc.clk | r_enc.DT << 1;
+    r_enc.prev_state = r_enc.start_state;
 
     return r_enc;
     
@@ -22,25 +25,55 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
 
 void read_rotary( Rotary_encoder* r )
 {
-    r->clk = gpio_read( r->gpio_offsets[0] , r->gp_chip );
-    r->DT  = gpio_read( r->gpio_offsets[1] , r->gp_chip );
+ // Keep these as ints until errors have been checked.
+    int clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
+    int dt  = gpio_read(r->gpio_offsets[1], r->gp_chip);
 
-    uint8_t current_state   = r->clk | ( r->DT >> 1 );
-    uint8_t prev_state      = r->prev_state;
-
-    
-    if( current_state == prev_state -1)
-    {
-        r->position--;
+    if (clk < 0 || dt < 0) {
+        return;
     }
-    else if( current_state == prev_state + 1)
+
+    r->clk = clk;
+    r->DT  = dt;
+
+    uint8_t current_state = (clk << 1) | dt;
+
+    // Four-bit value: [previous CLK, previous DT, CLK, DT].
+    uint8_t transition = (r->prev_state << 2) | current_state;
+
+    switch (transition) {
+        // 00 -> 01 -> 11 -> 10 -> 00
+        case 0x1:
+        case 0x7:
+        case 0xE:
+        case 0x8:
+            r->micro_pos++;
+            break;
+
+        // 00 -> 10 -> 11 -> 01 -> 00
+        case 0x2:
+        case 0xB:
+        case 0xD:
+        case 0x4:
+            r->micro_pos--;
+            break;
+
+        default:
+            // Unchanged state or invalid two-bit transition.
+            break;
+    }
+
+    if( r->micro_pos > 3)
     {
         r->position++;
+        r->micro_pos = 0;
+    }
+    else if( r->micro_pos < -3 )
+    {
+        r->position--;
+        r->micro_pos = 0;
     }
 
-    // anything other than this is a invalid state
-
     r->prev_state = current_state;
-
 }
 

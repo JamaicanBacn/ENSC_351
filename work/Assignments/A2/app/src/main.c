@@ -1,5 +1,6 @@
 
 #include "gpio.h"
+#include "rotaryEncoder.h"
 
 
 const GPIOCHIP0_OFFSETS gpiochip0_offsets = {
@@ -53,6 +54,14 @@ int main()
 
 
     gpio_init( &gpio_chip_2 , offsets , 2);
+
+    Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
+
+    while(1)
+    {
+        read_rotary(&R);
+        printf( "pos : %d , Clk : %u , DT : %u , STATE : %u\n" , R.position, R.clk , R.DT , R.prev_state);
+    }
 
     return 0;
 }
