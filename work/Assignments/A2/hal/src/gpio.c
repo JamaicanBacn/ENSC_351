@@ -36,6 +36,12 @@ int gpio_init( GPIOCHIP* gp_chip, uint32_t* offsets , int offset_count)
         return -1;
     }
 
+    if( gpiod_line_settings_set_edge_detection( settings , GPIOD_LINE_EDGE_BOTH) < 0)
+    {
+        perror( "GPIOD LINE DETECTION FAILED");
+        return -1;
+    }
+
     line_config = gpiod_line_config_new();
 
     if( !line_config )

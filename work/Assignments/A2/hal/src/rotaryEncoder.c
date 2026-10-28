@@ -15,17 +15,23 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
     // get the starting position , set postion to 0 to not count init
     read_rotary( &r_enc );
     r_enc.position = 0;
-    r_enc.micro_pos = 0;
-    r_enc.start_state = r_enc.clk | r_enc.DT << 1;
-    r_enc.prev_state = r_enc.start_state;
-
     return r_enc;
     
 }
 
-void read_rotary( Rotary_encoder* r )
+void* rotary_handler( void* r_enc)
 {
- // Keep these as ints until errors have been checked.
+
+    while(1)
+    {
+        read_rotary( r_enc );
+    }
+
+}
+
+void read_rotary(Rotary_encoder* r)
+{
+
     int clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
     int dt  = gpio_read(r->gpio_offsets[1], r->gp_chip);
 
@@ -33,47 +39,90 @@ void read_rotary( Rotary_encoder* r )
         return;
     }
 
-    r->clk = clk;
-    r->DT  = dt;
+    uint8_t current = ((uint8_t)clk << 1) | (uint8_t)dt;
+    uint8_t previous = r->prev_state;
 
-    uint8_t current_state = (clk << 1) | dt;
+    switch ( current )
+    {
+    case S0 :
+            if( previous == S3)
+            {
+                r->transitions++;
+            }
+            else if( previous == S1)
+            {
+                r->transitions--;
+            }
+            else if( previous == S2)
+            {
+                r->transitions = 0;
+            }
 
-    // Four-bit value: [previous CLK, previous DT, CLK, DT].
-    uint8_t transition = (r->prev_state << 2) | current_state;
+        break;
+    
+    case S1 :
+            if( previous == S0)
+            {
+                r->transitions++;
+            }
+            else if( previous == S2)
+            {
+                r->transitions--;
+            }
+            else if( previous == S3)
+            {
+                r->transitions = 0;
+            }
+        break;
 
-    switch (transition) {
-        // 00 -> 01 -> 11 -> 10 -> 00
-        case 0x1:
-        case 0x7:
-        case 0xE:
-        case 0x8:
-            r->micro_pos++;
-            break;
+    case S2 :
+            if( previous == S1)
+            {
+                r->transitions++;
+            }
+            else if( previous == S3)
+            {
+                r->transitions--;
+            }
+            else if( previous == S0)
+            {
+                r->transitions = 0;
+            }
 
-        // 00 -> 10 -> 11 -> 01 -> 00
-        case 0x2:
-        case 0xB:
-        case 0xD:
-        case 0x4:
-            r->micro_pos--;
-            break;
+        break;
 
-        default:
-            // Unchanged state or invalid two-bit transition.
-            break;
+    case S3 :
+            if( previous == S0)
+            {
+                r->transitions++;
+            }
+            else if( previous == S2)
+            {
+                r->transitions--;
+            }
+            else if( previous == S1)
+            {
+                r->transitions = 0;
+            }
+
+        break;
+
+    default:
+        break;
     }
 
-    if( r->micro_pos > 3)
+    if( r->transitions >= ROTARY_CYCLE_LENGTH)
     {
         r->position++;
-        r->micro_pos = 0;
+        r->transitions = 0;
     }
-    else if( r->micro_pos < -3 )
+    
+    if( r->transitions <= -ROTARY_CYCLE_LENGTH)
     {
         r->position--;
-        r->micro_pos = 0;
+        r->transitions = 0;
     }
 
-    r->prev_state = current_state;
+    r->prev_state = current;
+    
 }
-
