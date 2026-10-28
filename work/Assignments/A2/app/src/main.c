@@ -2,12 +2,13 @@
 #include "gpio.h"
 #include "rotaryEncoder.h"
 #include "pwm.h"
+#include "LED.h"
 #include <pthread.h>
 
 #define PWM_BASE_PATH "/dev/hat/pwm/GPIO12/"
 
 #define PWM_DUTY_PATH PWM_BASE_PATH"duty_cycle"
-#define PWM_ENABLE_PATH PWM_BASE_PATH "enable"
+#define PWM_ENABLE_PATH PWM_BASE_PATH"enable"
 #define PWM_PERIOD_PATH PWM_BASE_PATH"period"
 
 
@@ -73,12 +74,7 @@ int main()
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
     PWM pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
-    // Set the pwm struct values
-
-
-    pwm_struct.period = 2000000;
-    pwm_struct.enable = 1;
-    pwm_struct.duty_cycle = pwm_struct.period / 2 ;
+    
 
     pwm_set_all(pwm_struct);
 
@@ -88,7 +84,7 @@ int main()
 
     while(1)
     {
-        printf( "pos : %d , Clk : %u , DT : %u , STATE : %u\n" , R.position, R.clk , R.DT , R.prev_state);
+        printf( "pos : %d , Clk : %u , DT : %u , STATE : %u , Transition %d\n" , R.position, R.clk , R.DT , R.prev_state , R.transitions);
     }
 
     return 0;

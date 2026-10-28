@@ -3,10 +3,10 @@
 #define LED_H
 
 #include<stdio.h>
+#include<stdint.h>
 #include<fcntl.h>
 
-FILE* init_led(char * led_brightness , char* led_trigger);
-int write_to_led( FILE* led_path , char* value);
-int close_led(FILE* led_path);
+
+void control_speed( uint32_t control_speed);
 
 #endif

@@ -32,8 +32,11 @@ void* rotary_handler( void* r_enc)
 void read_rotary(Rotary_encoder* r)
 {
 
-    int clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
-    int dt  = gpio_read(r->gpio_offsets[1], r->gp_chip);
+    r->clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
+    r->DT  = gpio_read(r->gpio_offsets[1], r->gp_chip);
+
+    int clk = r->clk;
+    int dt  = r->DT;
 
     if (clk < 0 || dt < 0) {
         return;
@@ -54,6 +57,10 @@ void read_rotary(Rotary_encoder* r)
                 r->transitions--;
             }
             else if( previous == S2)
+            {
+                r->transitions = 0;
+            }
+            else
             {
                 r->transitions = 0;
             }
@@ -92,11 +99,11 @@ void read_rotary(Rotary_encoder* r)
         break;
 
     case S3 :
-            if( previous == S0)
+            if( previous == S2)
             {
                 r->transitions++;
             }
-            else if( previous == S2)
+            else if( previous == S0)
             {
                 r->transitions--;
             }
@@ -119,7 +126,8 @@ void read_rotary(Rotary_encoder* r)
     
     if( r->transitions <= -ROTARY_CYCLE_LENGTH)
     {
-        r->position--;
+        // removes negative positions
+        r->position = r->position > 0 ? r->position - 1 : 0;
         r->transitions = 0;
     }
 

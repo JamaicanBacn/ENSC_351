@@ -2,16 +2,16 @@
 #ifndef ROTARY_ENCODER_H
 #define ROTARY_ENCODER_H
 
-#define ROTARY_CYCLE_LENGTH 2
+#define ROTARY_CYCLE_LENGTH 4
 
 #include "gpio.h"
 #include <stdbool.h>
 
 typedef enum 
 {
-    S0 = 0,
+    S0 = 3,
     S1 = 1,
-    S2 = 3,
+    S2 = 0,
     S3 = 2
 } states;
 

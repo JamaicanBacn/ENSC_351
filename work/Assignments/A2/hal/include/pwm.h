@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+#define TEN_HZ 10000000
 
 
-#define DUTY_PERCENT_50 500000
 
 
 // Contains all relavent PWM values
@@ -17,9 +19,9 @@ typedef struct
     FILE* enable_fd;
     FILE* period_fd;
 
-    int duty_cycle;
-    int enable;
-    int period;
+    uint32_t duty_cycle;
+    uint32_t enable;
+    uint32_t period;
 
 } PWM;
 
