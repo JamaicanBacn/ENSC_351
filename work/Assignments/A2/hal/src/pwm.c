@@ -37,9 +37,19 @@ PWM pwm_init( char* duty_path , char* enable_path , char* period_path)
 }
 void pwm_set_all( PWM pwm_struct)
 {
+
+    PWM cleared = pwm_struct;
+
+    cleared.enable = 0;
+    pwm_set_enable(cleared);
+
+    cleared.duty_cycle = 0;
+    pwm_set_duty(cleared);
+
+    pwm_set_period(pwm_struct);
     pwm_set_duty(pwm_struct);
     pwm_set_enable(pwm_struct);
-    pwm_set_period(pwm_struct);
+
 }
 
 void pwm_set_duty( PWM pwm_struct)
