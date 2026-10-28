@@ -11,7 +11,7 @@
 
 
 
-
+#pragma pack( push ,1)
 // Contains all relavent PWM values
 typedef struct
 {
@@ -24,6 +24,8 @@ typedef struct
     uint32_t period;
 
 } PWM;
+
+#pragma pack(pop)
 
 PWM pwm_init( char* duty_path , char* enable_path , char* period_path);
 

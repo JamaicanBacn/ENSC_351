@@ -11,6 +11,8 @@
 #define PWM_ENABLE_PATH PWM_BASE_PATH"enable"
 #define PWM_PERIOD_PATH PWM_BASE_PATH"period"
 
+#define E9 1000000000
+
 
 /*
     Structs contain the offsets for the specific gpiochip
@@ -74,17 +76,16 @@ int main()
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
     PWM pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
-    
-
-    pwm_set_all(pwm_struct);
 
     // Rotary encoder runs on a seperate thread to ensure correct readings
     pthread_t encoder;
     pthread_create( &encoder , NULL , rotary_handler , &R);
+    
+    control_speed( R.position , &pwm_struct);
 
     while(1)
     {
-        printf( "pos : %d , Clk : %u , DT : %u , STATE : %u , Transition %d\n" , R.position, R.clk , R.DT , R.prev_state , R.transitions);
+        printf( " Period %lf , Duty %lf\n " , (double)pwm_struct.period / E9 , (double)pwm_struct.duty_cycle / E9 );
     }
 
     return 0;
