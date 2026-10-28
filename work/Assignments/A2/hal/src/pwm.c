@@ -1,7 +1,6 @@
 
 
 #include "pwm.h"
-#include <stdio.h>
 
 PWM pwm_init( char* duty_path , char* enable_path , char* period_path)
 {
@@ -16,25 +15,31 @@ PWM pwm_init( char* duty_path , char* enable_path , char* period_path)
     };
 
 
-    if( pwm_struct.duty_fd < 0 )
+    if( pwm_struct.duty_fd == NULL )
     {
         perror("PWM DUTY FD FAILED");
         exit(1);
     }
 
-    if( pwm_struct.enable_fd < 0 )
+    if( pwm_struct.enable_fd == NULL )
     {
         perror("PWM ENABLE FD FAILED");
         exit(1);
     }
 
-    if( pwm_struct.period_fd < 0 )
+    if( pwm_struct.period_fd == NULL )
     {
         perror("PWM PERODP FD FAILED");
         exit(1);
     }
 
     return pwm_struct;
+}
+void pwm_set_all( PWM pwm_struct)
+{
+    pwm_set_duty(pwm_struct);
+    pwm_set_enable(pwm_struct);
+    pwm_set_period(pwm_struct);
 }
 
 void pwm_set_duty( PWM pwm_struct)
@@ -53,7 +58,7 @@ void pwm_set_duty( PWM pwm_struct)
 
     if( fflush(pwm_struct.duty_fd) == EOF)
     {
-        perro("FFLUSH FAILED PWM DUTY");
+        perror("FFLUSH FAILED PWM DUTY");
         exit(1);
     }
 
@@ -76,7 +81,7 @@ void pwm_set_enable( PWM pwm_struct)
 
     if( fflush(pwm_struct.enable_fd) == EOF)
     {
-        perro("FFLUSH FAILED PWM ENABLE");
+        perror("FFLUSH FAILED PWM ENABLE");
         exit(1);
     }
 }
@@ -97,7 +102,7 @@ void pwm_set_period( PWM pwm_struct)
 
     if( fflush(pwm_struct.period_fd) == EOF)
     {
-        perro("FFLUSH FAILED PWM PERIOD");
+        perror("FFLUSH FAILED PWM PERIOD");
         exit(1);
     }
 }

@@ -1,9 +1,19 @@
 
 #include "gpio.h"
 #include "rotaryEncoder.h"
+#include "pwm.h"
 #include <pthread.h>
 
+#define PWM_BASE_PATH "/dev/hat/pwm/GPIO12/"
 
+#define PWM_DUTY_PATH PWM_BASE_PATH "duty_cycle"
+#define PWM_ENABLE_PATH PWM_BASE_PATH "period"
+#define PWM_PERIOD_PATH PWM_BASE_PATH "enable"
+
+
+/*
+    Structs contain the offsets for the specific gpiochip
+*/
 const GPIOCHIP0_OFFSETS gpiochip0_offsets = {
     .GPIO_2_OFFSET  = 18,
     .GPIO_3_OFFSET  = 17,
@@ -40,16 +50,17 @@ const GPIOCHIP2_OFFSETS gpiochip2_offsets = {
 };
 
 
-
-
 int main()
 {
+
+    //make an array of the offsets for the rotary encoder
      uint32_t offsets[2] = { 
                             gpiochip2_offsets.GPIO_18_OFFSET,
                             gpiochip2_offsets.GPIO_15_OFFSET
-                          };
+                            };
 
 
+    //Init the gpiochup structure
     GPIOCHIP gpio_chip_2 = {
         .gpio_path  = GPIOCHIP_2_PATH,
         .offsets    = offsets
@@ -60,7 +71,16 @@ int main()
     gpio_init( &gpio_chip_2 , offsets , 2);
 
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
+    PWM pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
+    // Set the pwm struct values
+    pwm_struct.duty_cycle = DUTY_PERCENT_50;
+    pwm_struct.enable = 1;
+    pwm_struct.period = 1;
+
+    pwm_set_all(pwm_struct);
+
+    // Rotary encoder runs on a seperate thread to ensure correct readings
     pthread_t encoder;
     pthread_create( &encoder , NULL , rotary_handler , &R);
 
