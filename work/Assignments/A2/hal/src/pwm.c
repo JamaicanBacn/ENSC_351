@@ -40,9 +40,6 @@ void pwm_set_all( PWM pwm_struct)
 
     PWM cleared = pwm_struct;
 
-    cleared.enable = 0;
-    pwm_set_enable(cleared);
-
     cleared.duty_cycle = 0;
     pwm_set_duty(cleared);
 

@@ -7,7 +7,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define TEN_HZ 10000000
+#define TEN_HZ 100000000
+#define E9 1000000000
+
+
+#define T_to_Hz( period ) (1 / ((double)period / E9) )
 
 
 

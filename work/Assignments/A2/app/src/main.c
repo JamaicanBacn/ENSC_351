@@ -11,7 +11,11 @@
 #define PWM_ENABLE_PATH PWM_BASE_PATH"enable"
 #define PWM_PERIOD_PATH PWM_BASE_PATH"period"
 
-#define E9 1000000000
+#define SPI_PATH "dev/spidev0.0"
+#define SPI_SPEED 50000
+#define SPI_BPT 8 // bits per transfer
+
+
 
 
 /*
@@ -72,6 +76,7 @@ int main()
 
 
     gpio_init( &gpio_chip_2 , offsets , 2);
+    spio_init( SPI_PATH , SPI_SPEED , SPI_BPT);
 
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
     PWM pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
@@ -85,7 +90,8 @@ int main()
 
     while(1)
     {
-        printf( " Period %lf , Duty %lf\n " , (double)pwm_struct.period / E9 , (double)pwm_struct.duty_cycle / E9 );
+        control_speed( R.position , &pwm_struct);
+        printf( " Period %lf\n "  ,  1 / ( (double)pwm_struct.period / E9 ) );
     }
 
     return 0;
