@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define TEN_HZ 100000000
+#define ONE_SECOND 1000000000
 #define E9 1000000000
 
 
