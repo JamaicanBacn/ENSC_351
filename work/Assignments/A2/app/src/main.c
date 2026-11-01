@@ -4,7 +4,7 @@
 #include "pwm.h"
 #include "LED.h"
 #include "m3208.h"
-
+#include "periodTimer.h"
 
 #include <pthread.h>
 #include <stdlib.h>
@@ -70,6 +70,9 @@ float second_samples[1000] = {0};
 float average_intensity = 0;
 
 uint64_t dips = 0;
+uint64_t dips_in_last_second = 0;
+
+Period_statistics_t Pstats = {0};
 
 bool dip_checker( int index);
 
@@ -86,9 +89,13 @@ void* light_sampler()
 
     while(1)
     {
-        for( int i = 0; i < 1000 ; i++)
+        unsigned long long current_time = time(NULL);
+        unsigned long long end_time = current_time + 1000000; // one second later
+
+        for( int i = 0; current_time < end_time && i < 1000 ; i++)
         {
             total_samples++;
+            Period_markEvent(PERIOD_EVENT_SAMPLE_LIGHT);
             second_samples[i] = VOLTS( m_3208_read( M3208_CHANNEL_0));
             voltage = second_samples[i];
 
@@ -99,7 +106,7 @@ void* light_sampler()
                 if( !dip_active )
                 {
                     dip_active = true;
-                    dips++;
+                    dips_in_last_second++;;
                 }
                 
             }
@@ -108,12 +115,18 @@ void* light_sampler()
                     dip_active = false;
                 }
 
-            printf("Voltage : %f , Average Intensity : %f Dips : %lu , Dip_Active : %d\n" , voltage , average_intensity, dips , dip_active );
             nanosleep(&spec , NULL);
+            current_time = time(NULL);
         }
+
+        Period_markEvent(PERIOD_EVENT_MARK_SECOND);
+        Period_getStatisticsAndClear( PERIOD_EVENT_MARK_SECOND , &Pstats);
+
+        printf( "Samples_captured : %lu\n" , Pstats.numSamples);
     }
 }
 
+void terminal_display();
 int main()
 {
 
@@ -126,7 +139,7 @@ int main()
         .offsets    = offsets
     };
 
-
+    Period_init();
 
     gpio_init( &gpio_chip_2 , offsets , 2);
     spi_init( SPI_PATH , SPI_SPEED , SPI_BPT);
@@ -140,6 +153,7 @@ int main()
     pthread_create( &encoder , NULL , rotary_handler , &R);
     pthread_create( &sampler , NULL , light_sampler , NULL );
     
+    
 
     while(1)
     {
@@ -147,6 +161,13 @@ int main()
     }
 
     return 0;
+}
+
+void terminal_display()
+{
+    
+
+    printf( "#Smpl/s = %lu    Flash @  %d   avg = %f    dips =   %lu    Smpl ms[ 2.047,  2.283] avg 2.056/487");
 }
 
 bool dip_checker( int index )
