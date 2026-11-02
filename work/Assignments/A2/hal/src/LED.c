@@ -21,10 +21,21 @@
 void control_speed( uint32_t control_speed , PWM* pwm_struct)
 {
 
-    pwm_struct->period = ONE_SECOND / ( 10 + control_speed);
-    pwm_struct->duty_cycle = pwm_struct->period / 2;
-    pwm_struct->enable = 1;
+    uint32_t new_period = ONE_SECOND / (10 + control_speed);
 
-    pwm_set_all( *pwm_struct );
+    if (pwm_struct->enable &&
+        pwm_struct->period == new_period) {
+        return;
+    }
+
+    if( control_speed <= 0)
+    {
+        pwm_struct->enable = 0;
+    }
+
+    pwm_struct->period = new_period;
+    pwm_struct->duty_cycle = new_period / 2;
+    pwm_struct->enable = 1;
+    pwm_set_all(*pwm_struct);
 
 }

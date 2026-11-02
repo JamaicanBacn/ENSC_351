@@ -120,7 +120,7 @@ void read_rotary(Rotary_encoder* r)
 
     if( r->transitions >= ROTARY_CYCLE_LENGTH)
     {
-        r->position++;
+        r->position = r->position < 500 ? r->position++ : r->position;
         r->transitions = 0;
     }
     

@@ -150,3 +150,11 @@ static long long getTimeInNanoS(void)
 
     return nanoSeconds;
 }
+void print_stats( Period_statistics_t pstats )
+{
+    printf( " Longest Interval %lf : , Shortest Interval : %lf , Samples : %d, AVG Period : %lf \n" ,
+        pstats.maxPeriodInMs,
+        pstats.minPeriodInMs,
+        pstats.numSamples,
+        pstats.avgPeriodInMs);
+}

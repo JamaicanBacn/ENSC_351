@@ -51,4 +51,6 @@ void Period_getStatisticsAndClear(
     Period_statistics_t *pStats
 );
 
+void print_stats( Period_statistics_t pstats);
+
 #endif

@@ -21,10 +21,11 @@
 #define SPI_BPT 8 // bits per transfer
 
 #define VOLTS( reading ) ( 3.3 * (float)(reading) / 4096 )
+#define T_to_Hz( reading ) ( ONE_SECOND /  reading )
 
 
 
-
+void terminal_display();
 
 /*
     Structs contain the offsets for the specific gpiochip
@@ -64,6 +65,8 @@ const GPIOCHIP2_OFFSETS gpiochip2_offsets = {
     .GPIO_21_OFFSET = 9
 };
 
+PWM pwm_struct = {0};
+
 uint64_t total_samples;
 float second_samples[1000] = {0};
 
@@ -72,7 +75,7 @@ float average_intensity = 0;
 uint64_t dips = 0;
 uint64_t dips_in_last_second = 0;
 
-Period_statistics_t Pstats = {0};
+Period_statistics_t pstats = {0};
 
 bool dip_checker( int index);
 
@@ -90,11 +93,10 @@ void* light_sampler()
     while(1)
     {
         unsigned long long current_time = time(NULL);
-        unsigned long long end_time = current_time + 1000000; // one second later
+        unsigned long long end_time = current_time + 1; // one second later
 
         for( int i = 0; current_time < end_time && i < 1000 ; i++)
         {
-            total_samples++;
             Period_markEvent(PERIOD_EVENT_SAMPLE_LIGHT);
             second_samples[i] = VOLTS( m_3208_read( M3208_CHANNEL_0));
             voltage = second_samples[i];
@@ -119,10 +121,8 @@ void* light_sampler()
             current_time = time(NULL);
         }
 
-        Period_markEvent(PERIOD_EVENT_MARK_SECOND);
-        Period_getStatisticsAndClear( PERIOD_EVENT_MARK_SECOND , &Pstats);
-
-        printf( "Samples_captured : %lu\n" , Pstats.numSamples);
+        Period_getStatisticsAndClear(PERIOD_EVENT_SAMPLE_LIGHT , &pstats);
+        terminal_display();
     }
 }
 
@@ -145,7 +145,7 @@ int main()
     spi_init( SPI_PATH , SPI_SPEED , SPI_BPT);
 
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
-    PWM pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
+    pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
 
     // Rotary encoder runs on a seperate thread to ensure correct readings
@@ -167,7 +167,15 @@ void terminal_display()
 {
     
 
-    printf( "#Smpl/s = %lu    Flash @  %d   avg = %f    dips =   %lu    Smpl ms[ 2.047,  2.283] avg 2.056/487");
+    printf( "#Smpl/s = %lu    Flash @  %d   avg = %fV    dips =   %lu    Smpl ms[ %lf,  %lf] avg %lf/%lu\n" ,
+            pstats.numSamples ,
+            T_to_Hz( pwm_struct.period),
+            average_intensity ,
+            dips_in_last_second,
+            pstats.minPeriodInMs,
+            pstats.maxPeriodInMs,
+            pstats.avgPeriodInMs,
+            pstats.numSamples);
 }
 
 bool dip_checker( int index )
