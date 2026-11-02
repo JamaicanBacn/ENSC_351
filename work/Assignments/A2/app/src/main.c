@@ -10,6 +10,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 #define PWM_BASE_PATH "/dev/hat/pwm/GPIO12/"
 
 #define PWM_DUTY_PATH PWM_BASE_PATH"duty_cycle"
@@ -123,6 +128,27 @@ void* light_sampler()
 
         Period_getStatisticsAndClear(PERIOD_EVENT_SAMPLE_LIGHT , &pstats);
         terminal_display();
+    }
+}
+
+void* UDP_manager( void* args )
+{
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd == -1) {
+        perror("socket");
+        return 1;
+    }
+
+    struct sockaddr_in local = {
+        .sin_family = AF_INET,
+        .sin_port = htons(12345),
+        .sin_addr.s_addr = htonl(INADDR_ANY)
+    };
+
+    if (bind(fd, (struct sockaddr *)&local, sizeof(local)) == -1) {
+        perror("bind");
+        close(fd);
+        return 1;
     }
 }
 
