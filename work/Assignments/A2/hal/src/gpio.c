@@ -95,3 +95,16 @@ int gpio_read( uint32_t offset , GPIOCHIP* gp_chip)
     return value;
 
 }
+
+void gpio_cleanup(GPIOCHIP *gp_chip)
+{
+    if (gp_chip->request) {
+        gpiod_line_request_release(gp_chip->request);
+        gp_chip->request = NULL;
+    }
+
+    if (gp_chip->chip) {
+        gpiod_chip_close(gp_chip->chip);
+        gp_chip->chip = NULL;
+    }
+}
