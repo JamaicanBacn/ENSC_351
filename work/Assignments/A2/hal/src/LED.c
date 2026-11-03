@@ -1,55 +1,41 @@
 
 #include "LED.h"
+#include "pwm.h"
 
-FILE* init_led(char * led_brightness , char* led_trigger)
+
+
+
+
+/*
+
+    @control speed
+        From the rotary encoder. position * 10 = speed in hz
+    
+    Functionality
+
+        If control speed < 0 : default 10hz
+
+
+
+*/
+void control_speed( uint32_t control_speed , PWM* pwm_struct)
 {
-    FILE* LED_trigger_path      = fopen(led_trigger , "w");
-    FILE* LED_brightness_path   = fopen(led_brightness    , "w");
 
-    if( LED_trigger_path == NULL || LED_brightness_path == NULL )
-    {
-        perror("LED OPENING FAILED");
-        return NULL;
+    uint32_t new_period = ONE_SECOND / (10 + control_speed);
+
+    if (pwm_struct->enable &&
+        pwm_struct->period == new_period) {
+        return;
     }
 
-    int written = fprintf( LED_trigger_path , "none");
-    if( written <= 0 )
+    if( control_speed <= 0)
     {
-        perror("TRIGGER FAILURE");
-        return NULL;
+        pwm_struct->enable = 0;
     }
 
-    fclose(LED_trigger_path);
+    pwm_struct->period = new_period;
+    pwm_struct->duty_cycle = new_period / 2;
+    pwm_struct->enable = 1;
+    pwm_set_all(*pwm_struct);
 
-    return LED_brightness_path;
-}
-
-int write_to_led( FILE* led_path , char* value )
-{
-    fseek( led_path , 0 , SEEK_SET);
-    int charWritten = fprintf(led_path , "%s" , value);
-
-
-    if( charWritten <= 0 )
-    {
-        perror("LED WRITE FAILED");
-        return -1;
-    }
-
-    fflush(led_path);
-
-    return 0;
-}
-
-int close_led( FILE* led_path)
-{
-    int closed = fclose( led_path );
-
-    if( closed < 0)
-    {
-        perror("LED CLOSE FAILED");
-        return -1;
-    }
-
-    return 0;
 }

@@ -3,7 +3,7 @@
 
 #include "rotaryEncoder.h"
 
-Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
+Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
 {
     Rotary_encoder r_enc = {
         .gp_chip = gp_chip,
@@ -15,32 +15,124 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, int offsets[2] )
     // get the starting position , set postion to 0 to not count init
     read_rotary( &r_enc );
     r_enc.position = 0;
-
+    r_enc.exit = 0;
     return r_enc;
     
 }
 
-void read_rotary( Rotary_encoder* r )
+void* rotary_handler( void* r_enc)
 {
-    r->clk = gpio_read( r->gpio_offsets[0] , r->gp_chip );
-    r->DT  = gpio_read( r->gpio_offsets[1] , r->gp_chip );
+    Rotary_encoder* r = (Rotary_encoder*)r_enc;
 
-    uint8_t current_state   = r->clk | ( r->DT >> 1 );
-    uint8_t prev_state      = r->prev_state;
-
-    
-    if( current_state == prev_state -1)
+    while( *(r->exit) != 1)
     {
-        r->position--;
+        read_rotary( r );
     }
-    else if( current_state == prev_state + 1)
-    {
-        r->position++;
-    }
-
-    // anything other than this is a invalid state
-
-    r->prev_state = current_state;
 
 }
 
+void read_rotary(Rotary_encoder* r)
+{
+
+    r->clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
+    r->DT  = gpio_read(r->gpio_offsets[1], r->gp_chip);
+
+    int clk = r->clk;
+    int dt  = r->DT;
+
+    if (clk < 0 || dt < 0) {
+        return;
+    }
+
+    uint8_t current = ((uint8_t)clk << 1) | (uint8_t)dt;
+    uint8_t previous = r->prev_state;
+
+    switch ( current )
+    {
+    case S0 :
+            if( previous == S3)
+            {
+                r->transitions++;
+            }
+            else if( previous == S1)
+            {
+                r->transitions--;
+            }
+            else if( previous == S2)
+            {
+                r->transitions = 0;
+            }
+            else
+            {
+                r->transitions = 0;
+            }
+
+        break;
+    
+    case S1 :
+            if( previous == S0)
+            {
+                r->transitions++;
+            }
+            else if( previous == S2)
+            {
+                r->transitions--;
+            }
+            else if( previous == S3)
+            {
+                r->transitions = 0;
+            }
+        break;
+
+    case S2 :
+            if( previous == S1)
+            {
+                r->transitions++;
+            }
+            else if( previous == S3)
+            {
+                r->transitions--;
+            }
+            else if( previous == S0)
+            {
+                r->transitions = 0;
+            }
+
+        break;
+
+    case S3 :
+            if( previous == S2)
+            {
+                r->transitions++;
+            }
+            else if( previous == S0)
+            {
+                r->transitions--;
+            }
+            else if( previous == S1)
+            {
+                r->transitions = 0;
+            }
+
+        break;
+
+    default:
+        break;
+    }
+
+    if( r->transitions >= ROTARY_CYCLE_LENGTH)
+    {
+        r->position = r->position < 500 ? r->position + 1 : r->position;
+        r->transitions = 0;
+    }
+    
+    if( r->transitions <= -ROTARY_CYCLE_LENGTH)
+    {
+        // removes negative positions
+        r->position = r->position > 0 ? r->position - 1 : 0;
+        r->transitions = 0;
+    }
+
+    r->prev_state = current;
+    
+}
