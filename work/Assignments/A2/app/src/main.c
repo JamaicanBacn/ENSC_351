@@ -25,10 +25,11 @@
 #define SPI_SPEED 10000
 #define SPI_BPT 8 // bits per transfer
 
+#define PACKET_SIZE 1500
 #define VOLTS( reading ) ( 3.3 * (float)(reading) / 4096 )
 #define T_to_Hz( reading ) ( ONE_SECOND /  reading )
 
-
+#define HELP "Accepted command examples:\ncount       -- get the total number of samples taken.\nlength      -- get the number of samples taken in the previously completed second.\ndips        -- get the number of dips in the previously completed second.\nhistory     -- get all the samples in the previously completed second.\nstop        -- cause the server program to end.\n<enter>     -- repeat last command.\n"
 
 void terminal_display();
 
@@ -69,6 +70,8 @@ const GPIOCHIP2_OFFSETS gpiochip2_offsets = {
     .GPIO_20_OFFSET = 10,
     .GPIO_21_OFFSET = 9
 };
+
+pthread_mutex_t lock;
 
 PWM pwm_struct = {0};
 
@@ -133,22 +136,46 @@ void* light_sampler()
 
 void* UDP_manager( void* args )
 {
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd == -1) {
+
+    char* prev_cmd = HELP;
+
+
+    int local_socket = socket(AF_INET, SOCK_DGRAM, 0);
+    if (local_socket == -1) {
         perror("socket");
-        return 1;
+        exit(1);
     }
 
-    struct sockaddr_in local = {
+    struct sockaddr_in server = {
         .sin_family = AF_INET,
         .sin_port = htons(12345),
         .sin_addr.s_addr = htonl(INADDR_ANY)
     };
 
-    if (bind(fd, (struct sockaddr *)&local, sizeof(local)) == -1) {
+    if (bind(local_socket, (struct sockaddr *)&server, sizeof(server)) == -1) {
         perror("bind");
-        close(fd);
-        return 1;
+        close(local_socket);
+        exit(1);
+    }
+
+
+    char* buffer[PACKET_SIZE];
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+
+    while(1)
+    {
+
+
+        ssize_t bytes = recvfrom( local_socket , buffer , sizeof(buffer) , 0 ,
+                               (struct sockaddr*)&client_addr , &client_len);
+
+        if( bytes <= 0 )
+        {
+            sendto(local_socket , prev_cmd , (size_t)sizeof(prev_cmd) , 0 ,
+                     (struct sockaddr*)&client_addr , ntohs(client_addr.sin_port));
+        }
+
     }
 }
 
@@ -165,6 +192,7 @@ int main()
         .offsets    = offsets
     };
 
+    printf(HELP);
     Period_init();
 
     gpio_init( &gpio_chip_2 , offsets , 2);
@@ -175,7 +203,8 @@ int main()
 
 
     // Rotary encoder runs on a seperate thread to ensure correct readings
-    pthread_t encoder , sampler;
+    pthread_t encoder , sampler , networking;
+    pthread_create( &networking , NULL , UDP_manager , NULL);
     pthread_create( &encoder , NULL , rotary_handler , &R);
     pthread_create( &sampler , NULL , light_sampler , NULL );
     
@@ -187,8 +216,11 @@ int main()
     }
 
     return 0;
-}
 
+    pthread_join( encoder , NULL);
+    pthread_join( sampler , NULL);
+    pthread_join( networking, NULL);
+}
 void terminal_display()
 {
     
