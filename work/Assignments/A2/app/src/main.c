@@ -36,8 +36,10 @@
 #define DIPS    " Dips: %lu\n"
 #define STOP    "Terminating Program\n"
 
-#define HISTORY_LINE "%f, %f, %f, %f, %f, %f, %f, %f, %f, %f%f, %f, %f, %f, %f, %f, %f, %f, %f, %f\n"
+#define HISTORY_LINE "%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f\n"
 #define HISTORY_ELEMENT "%f, "
+
+#define START_POS 10;
 
 
 void terminal_display();
@@ -109,10 +111,11 @@ void* light_sampler( void* exit)
     float voltage;
     bool dip_active = false;
 
-    pthread_mutex_lock(&sampler_mutex);
 
     while(1)
     {
+        pthread_mutex_lock(&sampler_mutex);
+
         unsigned long long current_time = time(NULL);
         unsigned long long end_time = current_time + 1; // one second later
 
@@ -150,12 +153,11 @@ void* light_sampler( void* exit)
         nanosleep(&spec , NULL);
         pthread_mutex_lock( &sampler_mutex);
 
-        memset( second_samples , 0 , sizeof(second_samples));
         pthread_mutex_unlock(&sampler_mutex);
 
         if( exit_cmd == 1)
         {
-            pthread_exit(0);
+            pthread_exit(NULL);
         }
 
     }
@@ -262,7 +264,7 @@ void* UDP_manager( )
         {
             int index = 0;
 
-            for( index = 0; index < (int)(pstats.numSamples) -20 ; index += 20 )
+            for( index = 0; index < (pstats.numSamples) -20 ; index += 20 )
             {
                 snprintf(response, sizeof(response),
                     HISTORY_LINE,
@@ -349,7 +351,8 @@ void* UDP_manager( )
             );
 
             exit_cmd = 1;
-            pthread_exit(0);
+            pthread_mutex_unlock(&sampler_mutex);
+            pthread_exit(NULL);
 
 
         }
@@ -360,6 +363,7 @@ void* UDP_manager( )
 }
 
 void terminal_display();
+
 int main()
 {
 
@@ -378,6 +382,7 @@ int main()
 
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
     R.exit = &exit_cmd;
+    R.position = START_POS;
 
     pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
@@ -397,21 +402,23 @@ int main()
         control_speed( R.position , &pwm_struct);
     }
 
-    return 0;
-
     pthread_join( encoder , NULL);
     pthread_join( sampler , NULL);
     pthread_join( networking, NULL);
+
+    gpio_cleanup(&gpio_chip_2);
+
     return 0;
 
 }
+
 void terminal_display()
 {
     
 
     printf( "#Smpl/s = %d    Flash @  %d   avg = %fV    dips =   %lu    Smpl ms[ %lf,  %lf] avg %lf/%d\n" ,
             pstats.numSamples ,
-            T_to_Hz( pwm_struct.period),
+            T_to_Hz( pwm_struct.period) -1,
             average_intensity ,
             dips_in_last_second,
             pstats.minPeriodInMs,
