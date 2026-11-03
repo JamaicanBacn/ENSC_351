@@ -15,16 +15,18 @@ Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
     // get the starting position , set postion to 0 to not count init
     read_rotary( &r_enc );
     r_enc.position = 0;
+    r_enc.exit = 0;
     return r_enc;
     
 }
 
 void* rotary_handler( void* r_enc)
 {
+    Rotary_encoder* r = (Rotary_encoder*)r_enc;
 
-    while(1)
+    while( *(r->exit) != 1)
     {
-        read_rotary( r_enc );
+        read_rotary( r );
     }
 
 }

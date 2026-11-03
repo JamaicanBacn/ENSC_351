@@ -31,6 +31,15 @@
 
 #define HELP "Accepted command examples:\ncount       -- get the total number of samples taken.\nlength      -- get the number of samples taken in the previously completed second.\ndips        -- get the number of dips in the previously completed second.\nhistory     -- get all the samples in the previously completed second.\nstop        -- cause the server program to end.\n<enter>     -- repeat last command.\n"
 
+#define COUNT "# samples taken total: %lu\n"
+#define LENGTH "samples taken last second: %d\n"
+#define DIPS    " Dips: %lu\n"
+#define STOP    "Terminating Program\n"
+
+#define HISTORY_LINE "%f, %f, %f, %f, %f, %f, %f, %f, %f, %f%f, %f, %f, %f, %f, %f, %f, %f, %f, %f\n"
+#define HISTORY_ELEMENT "%f, "
+
+
 void terminal_display();
 
 /*
@@ -71,9 +80,11 @@ const GPIOCHIP2_OFFSETS gpiochip2_offsets = {
     .GPIO_21_OFFSET = 9
 };
 
-pthread_mutex_t lock;
+pthread_mutex_t sampler_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 PWM pwm_struct = {0};
+
+uint8_t exit_cmd = 0;
 
 uint64_t total_samples;
 float second_samples[1000] = {0};
@@ -87,7 +98,7 @@ Period_statistics_t pstats = {0};
 
 bool dip_checker( int index);
 
-void* light_sampler()
+void* light_sampler( void* exit)
 {
 
     struct timespec spec = {
@@ -97,6 +108,8 @@ void* light_sampler()
 
     float voltage;
     bool dip_active = false;
+
+    pthread_mutex_lock(&sampler_mutex);
 
     while(1)
     {
@@ -108,6 +121,7 @@ void* light_sampler()
             Period_markEvent(PERIOD_EVENT_SAMPLE_LIGHT);
             second_samples[i] = VOLTS( m_3208_read( M3208_CHANNEL_0));
             voltage = second_samples[i];
+            total_samples++;
 
             average_intensity = average_intensity * 0.999 + 0.001 * voltage; 
 
@@ -116,7 +130,7 @@ void* light_sampler()
                 if( !dip_active )
                 {
                     dip_active = true;
-                    dips_in_last_second++;;
+                    dips_in_last_second++;
                 }
                 
             }
@@ -131,13 +145,26 @@ void* light_sampler()
 
         Period_getStatisticsAndClear(PERIOD_EVENT_SAMPLE_LIGHT , &pstats);
         terminal_display();
+
+        pthread_mutex_unlock(&sampler_mutex);
+        nanosleep(&spec , NULL);
+        pthread_mutex_lock( &sampler_mutex);
+
+        memset( second_samples , 0 , sizeof(second_samples));
+        pthread_mutex_unlock(&sampler_mutex);
+
+        if( exit_cmd == 1)
+        {
+            pthread_exit(0);
+        }
+
     }
 }
 
-void* UDP_manager( void* args )
+void* UDP_manager( )
 {
 
-    char* prev_cmd = HELP;
+    char prev_cmd[1000] = HELP;
 
 
     int local_socket = socket(AF_INET, SOCK_DGRAM, 0);
@@ -159,7 +186,7 @@ void* UDP_manager( void* args )
     }
 
 
-    char* buffer[PACKET_SIZE];
+    char buffer[PACKET_SIZE];
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
 
@@ -167,14 +194,167 @@ void* UDP_manager( void* args )
     {
 
 
-        ssize_t bytes = recvfrom( local_socket , buffer , sizeof(buffer) , 0 ,
+        ssize_t bytes = recvfrom( local_socket , buffer , sizeof(buffer) - 1, 0 ,
                                (struct sockaddr*)&client_addr , &client_len);
 
-        if( bytes <= 0 )
+        pthread_mutex_lock(&sampler_mutex);
+
+        buffer[bytes] = '\0';
+        buffer[strcspn(buffer, "\r\n")] = '\0';
+        char response[PACKET_SIZE];
+        
+        if( !strcmp( buffer , "") )
         {
-            sendto(local_socket , prev_cmd , (size_t)sizeof(prev_cmd) , 0 ,
-                     (struct sockaddr*)&client_addr , ntohs(client_addr.sin_port));
+            memset( buffer , 0 , sizeof(buffer));
+            strcpy(buffer , prev_cmd);
         }
+        
+        if( !strcmp(buffer , "help") || !strcmp(buffer , "?") )
+        {
+            snprintf(response, sizeof(response), HELP);
+
+            sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+            );
+
+            strcpy(prev_cmd , buffer);
+        }
+        else if( !strcmp(buffer , "count") )
+        {
+            snprintf(response, sizeof(response),
+                      COUNT, total_samples);
+
+            sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+            );
+
+            strcpy(prev_cmd , buffer);
+
+        }
+        else if ( !strcmp(buffer , "length"))
+        {
+            snprintf(response, sizeof(response),
+                      LENGTH , pstats.numSamples);
+
+            sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+            );
+
+            strcpy(prev_cmd , buffer);
+
+        }
+        else if ( !strcmp(buffer , "history"))
+        {
+            int index = 0;
+
+            for( index = 0; index < (int)(pstats.numSamples) -20 ; index += 20 )
+            {
+                snprintf(response, sizeof(response),
+                    HISTORY_LINE,
+                    second_samples[index],
+                    second_samples[index + 1], 
+                    second_samples[index + 2],
+                    second_samples[index + 3],
+                    second_samples[index + 4],
+                    second_samples[index + 5],
+                    second_samples[index + 6],
+                    second_samples[index + 7],
+                    second_samples[index + 8],
+                    second_samples[index + 9],
+                    second_samples[index + 10],
+                    second_samples[index + 11], 
+                    second_samples[index + 12],
+                    second_samples[index + 13],
+                    second_samples[index + 14],
+                    second_samples[index + 15],
+                    second_samples[index + 16],
+                    second_samples[index + 17],
+                    second_samples[index + 18],
+                    second_samples[index + 19]   
+                );
+
+                sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+                );
+            }
+
+            for( ; index < pstats.numSamples ; index++)
+            {
+                snprintf(response, sizeof(response),
+                    HISTORY_ELEMENT , second_samples[index]);
+
+                sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+                );
+                
+            }
+
+            strcpy(prev_cmd , buffer);
+        }
+        else if( !strcmp(buffer , "dips"))
+        {
+            snprintf(response, sizeof(response),
+                      DIPS, dips_in_last_second);
+
+            sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+            );
+            strcpy(prev_cmd , buffer);
+
+        }
+        else if( !strcmp( buffer , "stop"))
+        {
+            snprintf(response, sizeof(response),
+                      STOP);
+
+
+
+            sendto(
+                local_socket,
+                response,
+                strlen(response),
+                 0,
+                 (struct sockaddr *)&client_addr,
+                 client_len
+            );
+
+            exit_cmd = 1;
+            pthread_exit(0);
+
+
+        }
+
+        pthread_mutex_unlock(&sampler_mutex);
 
     }
 }
@@ -191,26 +371,28 @@ int main()
         .gpio_path  = GPIOCHIP_2_PATH,
         .offsets    = offsets
     };
-
-    printf(HELP);
     Period_init();
 
     gpio_init( &gpio_chip_2 , offsets , 2);
     spi_init( SPI_PATH , SPI_SPEED , SPI_BPT);
 
     Rotary_encoder R = init_Rotary_encoder( &gpio_chip_2 , offsets);
+    R.exit = &exit_cmd;
+
     pwm_struct = pwm_init( PWM_DUTY_PATH , PWM_ENABLE_PATH , PWM_PERIOD_PATH);
 
 
     // Rotary encoder runs on a seperate thread to ensure correct readings
     pthread_t encoder , sampler , networking;
+
+    
     pthread_create( &networking , NULL , UDP_manager , NULL);
     pthread_create( &encoder , NULL , rotary_handler , &R);
     pthread_create( &sampler , NULL , light_sampler , NULL );
     
     
 
-    while(1)
+    while( exit_cmd == 0 )
     {
         control_speed( R.position , &pwm_struct);
     }
@@ -220,12 +402,14 @@ int main()
     pthread_join( encoder , NULL);
     pthread_join( sampler , NULL);
     pthread_join( networking, NULL);
+    return 0;
+
 }
 void terminal_display()
 {
     
 
-    printf( "#Smpl/s = %lu    Flash @  %d   avg = %fV    dips =   %lu    Smpl ms[ %lf,  %lf] avg %lf/%lu\n" ,
+    printf( "#Smpl/s = %d    Flash @  %d   avg = %fV    dips =   %lu    Smpl ms[ %lf,  %lf] avg %lf/%d\n" ,
             pstats.numSamples ,
             T_to_Hz( pwm_struct.period),
             average_intensity ,

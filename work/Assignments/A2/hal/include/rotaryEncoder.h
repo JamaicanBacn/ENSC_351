@@ -24,6 +24,8 @@ typedef struct
     uint8_t DT  : 2; 
     uint8_t sel : 1;
 
+    uint8_t* exit;
+
     uint8_t prev_state : 2;
     int position;
     int transitions;

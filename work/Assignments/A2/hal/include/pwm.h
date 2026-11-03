@@ -11,8 +11,6 @@
 #define E9 1000000000
 
 
-#define T_to_Hz( period ) (1 / ((double)period / E9) )
-
 
 
 #pragma pack( push ,1)
