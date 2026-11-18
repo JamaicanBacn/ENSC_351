@@ -1,21 +1,18 @@
 
 #include "gpio.h"
 
-static struct gpiod_chip* chip = NULL; // what gpio chip is being used
-static struct gpiod_line_request* request = NULL; // line request
-static unsigned int gpio_offset; // line offset in the gpio file
-
-int gpio_init( const char* chip_path , unsigned int offset)
+int gpio_init( GPIOCHIP* gp_chip, uint32_t* offsets , int offset_count)
 {
     struct gpiod_line_settings*     settings = NULL;
     struct gpiod_request_config *   request_config = NULL;
     struct gpiod_line_config *      line_config = NULL;
 
-    gpio_offset = offset;
 
-    chip = gpiod_chip_open(chip_path); // check if the gpio acess 
 
-    if( !chip )
+
+    gp_chip->chip = gpiod_chip_open(gp_chip->gpio_path); // check if the gpio acess 
+
+    if( !gp_chip->chip )
     {
         perror("GPIOD CHIP OPEN FAILURE");
         return -1;
@@ -37,6 +34,12 @@ int gpio_init( const char* chip_path , unsigned int offset)
         return -1;
     }
 
+    if( gpiod_line_settings_set_edge_detection( settings , GPIOD_LINE_EDGE_BOTH) < 0)
+    {
+        perror( "GPIOD LINE DETECTION FAILED");
+        return -1;
+    }
+
     line_config = gpiod_line_config_new();
 
     if( !line_config )
@@ -47,20 +50,20 @@ int gpio_init( const char* chip_path , unsigned int offset)
 
     if( gpiod_line_config_add_line_settings(
         line_config,
-        &gpio_offset,
-        1,
+        offsets,
+        offset_count,
         settings) < 0 )
         {
             perror(" GPIOD LINE CONFIG ADD LINE SETTINGS FAILURE");
         }
 
-    request = gpiod_chip_request_lines(
-        chip,
+    gp_chip->request = gpiod_chip_request_lines(
+        gp_chip->chip,
         request_config,
         line_config
     );
 
-    if( !request )
+    if( !gp_chip->request )
     {
         perror("GPIOD LINE REQUEST CONFIG");
         return -1;
@@ -74,11 +77,11 @@ int gpio_init( const char* chip_path , unsigned int offset)
 
 }
 
-int gpio_read( void )
+int gpio_read( uint32_t offset , GPIOCHIP* gp_chip)
 {
     enum gpiod_line_value value;
 
-    value = gpiod_line_request_get_value( request , gpio_offset);
+    value = gpiod_line_request_get_value( gp_chip->request , offset);
     
 
     if( value == GPIOD_LINE_VALUE_ERROR )
@@ -89,4 +92,17 @@ int gpio_read( void )
 
     return value;
 
+}
+
+void gpio_cleanup(GPIOCHIP *gp_chip)
+{
+    if (gp_chip->request) {
+        gpiod_line_request_release(gp_chip->request);
+        gp_chip->request = NULL;
+    }
+
+    if (gp_chip->chip) {
+        gpiod_chip_close(gp_chip->chip);
+        gp_chip->chip = NULL;
+    }
 }
