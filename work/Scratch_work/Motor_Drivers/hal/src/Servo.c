@@ -15,7 +15,7 @@ void set_servo_angle( uint8_t servo  , /*degrees*/ uint8_t angle )
 
     if( i2c_write( SERVO_I2C_ADDR , &buffer , 2 ) < 0)
     {
-        exit(1)
+        exit(1);
     }
 
 }   
