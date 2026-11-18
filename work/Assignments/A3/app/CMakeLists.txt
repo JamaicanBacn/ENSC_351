@@ -1,13 +1,21 @@
+find_package(ALSA REQUIRED)
+
 include_directories(include)
 file(GLOB MY_SOURCES "src/*.c")
-add_executable( lightSampler ${MY_SOURCES})
+add_executable( beatbox ${MY_SOURCES})
 
-target_link_libraries( lightSampler LINK_PRIVATE hal)
+target_link_libraries(beatbox LINK_PRIVATE asound)
+target_link_libraries(beatbox PRIVATE gpiod m)
 
-target_link_libraries( lightSampler PRIVATE gpiod m)
+set(NFS_DIR "$ENV{HOME}/public")
 
-add_custom_command(TARGET lightSampler POST_BUILD
+add_custom_command(TARGET beatbox POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy
-        "$<TARGET_FILE:beatbox>"
-        "$ENV{HOME}/public/"
-    COMMENT "Copying exec to public")
+            "$<TARGET_FILE:beatbox>" "${NFS_DIR}/beatbox"
+
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+            "${CMAKE_SOURCE_DIR}/wave-files" "${NFS_DIR}/wave-files"
+
+    COMMENT "Copying beatbox and wave files to NFS"
+    VERBATIM
+)
