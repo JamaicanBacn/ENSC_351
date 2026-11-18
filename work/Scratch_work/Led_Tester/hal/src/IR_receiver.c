@@ -26,13 +26,9 @@ static void sleepForMs(long long delayInMs)
     nanosleep(&reqDelay, (struct timespec *) NULL);
 }
 
-int init_IR_REC( const char* chip_path , unsigned int offset)
-{
-    gpio_init( chip_path , offset);
-    return 1;
-}
 
-int read_IR_REC( void )
+
+int read_IR_REC( int offset , GPIOCHIP *GP )
 {   
 
     int value = 1;
@@ -40,10 +36,10 @@ int read_IR_REC( void )
     unsigned long long start_time = getTimeInMs();
     unsigned long long end_time = start_time;
 
-    while( end_time - start_time  < 100 )
+    while( end_time - start_time  < 10 )
     {
         end_time = getTimeInMs();
-        value = gpio_read();
+        value = gpio_read( offset , GP);
         if( value == 0 )
         {
             return 1;

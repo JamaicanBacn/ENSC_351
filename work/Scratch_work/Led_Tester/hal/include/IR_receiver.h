@@ -6,7 +6,6 @@
 #include "gpio.h"
 
 
-int init_IR_REC( const char* chip_path , unsigned int offset);
-int read_IR_REC( void );
+int read_IR_REC( int offset , GPIOCHIP* GP );
 
 #endif

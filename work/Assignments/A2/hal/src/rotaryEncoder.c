@@ -1,6 +1,7 @@
 
 
 
+
 #include "rotaryEncoder.h"
 
 Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
