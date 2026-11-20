@@ -6,6 +6,7 @@
 
 #include    "accellerometer.h"
 #include    "rotaryEncoder.h"
+#include    "audioMixer.h"   
 #include    "joystick.h"
 
 
@@ -27,6 +28,17 @@
 #define OFFSETS           ((const unsigned int[]){ JOYSTICK_GPIO, ROTARY_GPIO_VALUES })
 
 #define OFFSET_COUNT        4
+
+#define DRUM_HARD_PATH "wave-files/100051__menegass__gui-drum-bd-hard.wav"
+#define DRUM_SOFT_PATH "wave-files/100052__menegass__gui-drum-bd-soft.wav"
+
+#define SOUND_COUNT 2
+
+enum SOUND_INDICES
+{
+    DRUM_HARD,
+    DRUM_SOFT
+};
 
 const GPIOCHIP0_OFFSETS gpiochip0_offsets = {
     .GPIO_2_OFFSET  = 18,
@@ -69,6 +81,9 @@ JoyStick        joystick;
 
 GPIOCHIP gp_chip2;
 
+wavedata_t* sounds[SOUND_COUNT];
+
+
 void init_peripherals( GPIOCHIP* gp_chip , uint32_t offsets[] , int offset_count);
 void print_peripherals();
 void read_peripherals();
@@ -77,8 +92,18 @@ int main()
 {
 
     unsigned int offsets[] = { JOYSTICK_GPIO, ROTARY_GPIO_VALUES };
-
     init_peripherals( &gp_chip2 , offsets , OFFSET_COUNT);
+
+    
+    AudioMixer_init();
+
+    AudioMixer_readWaveFileIntoMemory(DRUM_HARD_PATH , sounds[0]);
+    AudioMixer_readWaveFileIntoMemory(DRUM_SOFT_PATH , sounds[1]);
+
+    AudioMixer_queueSound(sounds[0]);
+    AudioMixer_queueSound(sounds[1]);
+
+    AudioMixer_cleanup();
 
     return 0;
 }
@@ -117,5 +142,5 @@ printf("Accel  [X=%4" PRIu32 " Y=%4" PRIu32 " Z=%4" PRIu32 "]  "
 
 void print_terminal()
 {
-    
+
 }

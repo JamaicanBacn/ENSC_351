@@ -330,7 +330,7 @@ static void fillPlaybackBuffer(short *buff, int size)
 			}
 			else{
 
-			buff[j] += PCM;
+			buff[j] = PCM;
 			}
 
 			location++;
