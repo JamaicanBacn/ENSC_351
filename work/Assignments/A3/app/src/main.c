@@ -114,3 +114,8 @@ printf("Accel  [X=%4" PRIu32 " Y=%4" PRIu32 " Z=%4" PRIu32 "]  "
        rotary.position, (int)rotary.sel,
        joystick.x_pos, joystick.y_pos, (int)joystick.sel);
 }
+
+void print_terminal()
+{
+    
+}

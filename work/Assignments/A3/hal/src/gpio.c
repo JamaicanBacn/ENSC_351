@@ -84,7 +84,6 @@ int gpio_read( uint32_t offset , GPIOCHIP* gp_chip)
     enum gpiod_line_value value;
 
     value = gpiod_line_request_get_value( gp_chip->request , offset);
-    
 
     if( value == GPIOD_LINE_VALUE_ERROR )
     {

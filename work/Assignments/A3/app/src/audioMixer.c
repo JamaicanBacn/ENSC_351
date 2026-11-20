@@ -157,19 +157,26 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 	 */
 
 	 int free_index = -1;
-	 playbackSound_t* current_sound;
+
+	 pthread_mutex_lock(&audioMutex);
 
 	for(int i = 0; i < MAX_SOUND_BITES ; i++)
 	{
-		*current_sound = soundBites[i];
 
-		if( current_sound == NULL)
+		if( soundBites[i].pSound == NULL)
 		{
+			
+			soundBites[i].pSound = pSound;
+			soundBites[i].location = 0;
+			pthread_mutex_unlock(&audioMutex);
+			return;
 			
 		}
 	}
 
-	 pthread_mutex_lock(&audioMutex);
+	pthread_mutex_unlock(&audioMutex);
+	return;
+
 
 
 
@@ -289,6 +296,59 @@ static void fillPlaybackBuffer(short *buff, int size)
 	 *
 	 */
 
+	pthread_mutex_lock(&audioMutex);
+	
+	memset( buff , 0 , size * sizeof(short));
+
+	
+
+	for( int i = 0; i < MAX_SOUND_BITES; i++)
+	{
+		playbackSound_t* current_sound = &soundBites[i];
+		int location = current_sound->location;
+
+		wavedata_t* pSound = current_sound->pSound;
+		
+		if( pSound == NULL) continue;
+
+		int samples = pSound->numSamples;
+
+		for(int j = 0; j < size && location < samples; j++ )
+		{
+
+			
+
+			int PCM = buff[j] + pSound->pData[location];
+
+			if( PCM >= SHRT_MAX )
+			{
+				buff[j] = SHRT_MAX;
+			}
+			else if( PCM <= SHRT_MIN )
+			{
+				buff[j] = SHRT_MIN;
+			}
+			else{
+
+			buff[j] += PCM;
+			}
+
+			location++;
+			
+		}
+
+		if( location == samples )
+		{
+			current_sound->pSound = NULL;
+			current_sound->location = 0;
+		}
+		else
+		{
+			current_sound->location = location;
+		}
+	}
+
+	pthread_mutex_unlock(&audioMutex);
 
 
 }
