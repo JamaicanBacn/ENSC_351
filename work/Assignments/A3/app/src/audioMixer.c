@@ -156,6 +156,21 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 	 *    not being able to play another wave file.
 	 */
 
+	 int free_index = -1;
+	 playbackSound_t* current_sound;
+
+	for(int i = 0; i < MAX_SOUND_BITES ; i++)
+	{
+		*current_sound = soundBites[i];
+
+		if( current_sound == NULL)
+		{
+			
+		}
+	}
+
+	 pthread_mutex_lock(&audioMutex);
+
 
 
 

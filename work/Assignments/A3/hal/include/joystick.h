@@ -13,20 +13,17 @@ typedef struct {
 
     uint8_t x_channel; // channel for X ADC
     uint8_t y_channel; // channel for Y ADC
-    struct  gpiod_line *sel_line;
+    GPIOCHIP* gp_chip;
+    uint32_t gpio_offset;
     float x_pos;
     float y_pos;
     bool sel;
 
 } JoyStick;
 
-JoyStick JoyStick_Init( uint8_t x_channel,
-                        uint8_t y_channel,
-                        char* spi_path,
-                        uint32_t speed,
-                        char* gpio_path,
-                        unsigned int gpio_offset,
-                        uint32_t bits_per_transfer
+JoyStick JoyStick_Init( uint8_t xy_channels[2],
+                        GPIOCHIP* gp_chip,
+                        uint32_t sel_offset
                         );
 
 void JoyStick_Read( JoyStick* joystick );

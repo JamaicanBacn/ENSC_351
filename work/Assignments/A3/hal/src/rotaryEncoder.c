@@ -3,39 +3,33 @@
 
 #include "rotaryEncoder.h"
 
-Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[2] )
+Rotary_encoder init_Rotary_encoder( GPIOCHIP* gp_chip, uint32_t offsets[3] )
 {
     Rotary_encoder r_enc = {
         .gp_chip = gp_chip,
         .gpio_offsets[0] = offsets[0],
         .gpio_offsets[1] = offsets[1],
-        .sel = 0
+        .gpio_offsets[2] = offsets[2],
+
+        .sel = 0,
+        .transitions = 0,
+        .position = 0,
+
+        .clk = 0,
+        .DT = 0,
+        .exit = 0
     };
 
-    // get the starting position , set postion to 0 to not count init
-    read_rotary( &r_enc );
-    r_enc.position = 0;
-    r_enc.exit = 0;
     return r_enc;
     
-}
-
-void* rotary_handler( void* r_enc)
-{
-    Rotary_encoder* r = (Rotary_encoder*)r_enc;
-
-    while( *(r->exit) != 1)
-    {
-        read_rotary( r );
-    }
-
 }
 
 void read_rotary(Rotary_encoder* r)
 {
 
-    r->clk = gpio_read(r->gpio_offsets[0], r->gp_chip);
-    r->DT  = gpio_read(r->gpio_offsets[1], r->gp_chip);
+    r->clk = gpio_read(r->gpio_offsets[DT],  r->gp_chip);
+    r->DT  = gpio_read(r->gpio_offsets[CLK], r->gp_chip);
+    r->sel = gpio_read(r->gpio_offsets[SEL], r->gp_chip);
 
     int clk = r->clk;
     int dt  = r->DT;
@@ -122,7 +116,7 @@ void read_rotary(Rotary_encoder* r)
 
     if( r->transitions >= ROTARY_CYCLE_LENGTH)
     {
-        r->position = r->position < 500 ? r->position + 1 : r->position;
+        r->position = r->position < 5 ? r->position + 1 : r->position;
         r->transitions = 0;
     }
     

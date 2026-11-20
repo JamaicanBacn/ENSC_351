@@ -1,31 +1,19 @@
 
 #include "joystick.h"
 
-JoyStick JoyStick_Init( uint8_t x_channel,
-                        uint8_t y_channel,
-                        char* spi_path,
-                        unsigned int speed,
-                        char* gpio_path,
-                        unsigned int gpio_offset,
-                        uint32_t bits_per_word
+JoyStick JoyStick_Init( uint8_t xy_channel[2],
+                        GPIOCHIP* gp_chip,
+                        uint32_t sel_offset
                         )
 {
     JoyStick joystick = {
-        .x_channel = x_channel,
-        .y_channel = y_channel,
+        .x_channel = xy_channel[0],
+        .y_channel = xy_channel[1],
+        .gp_chip = gp_chip,
+        .gpio_offset = sel_offset,
         .y_pos = 0,
         .x_pos = 0
-    };
-
-    if(spi_init( spi_path , speed , bits_per_word) < 0)
-    {
-        exit(1);
-    }
-
-    if( gpio_init( gpio_path , gpio_offset ) < 0 )
-    {
-        exit(1);
-    }
+    }; 
 
     return joystick;
 
@@ -41,6 +29,6 @@ void JoyStick_Read( JoyStick* joystick )
     joystick->x_pos = (float)(raw_x_value - 2048) / 2047 ;
     joystick->y_pos = (float)(raw_y_value - 2048) / 2047 ;
 
-    joystick->sel = !gpio_read();
+    joystick->sel = !gpio_read( joystick->gpio_offset , joystick->gp_chip);
 
 }

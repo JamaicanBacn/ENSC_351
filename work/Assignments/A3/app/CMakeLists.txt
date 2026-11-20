@@ -1,10 +1,10 @@
+include_directories(include)
 find_package(ALSA REQUIRED)
 
-include_directories(include)
 file(GLOB MY_SOURCES "src/*.c")
 add_executable( beatbox ${MY_SOURCES})
 
-target_link_libraries(beatbox LINK_PRIVATE asound)
+target_link_libraries(beatbox LINK_PRIVATE hal asound)
 target_link_libraries(beatbox PRIVATE gpiod m)
 
 set(NFS_DIR "$ENV{HOME}/public")
