@@ -38,7 +38,7 @@ void BeatsInit()
 {
     beat_stopping = false;
     beat = NOTHING;
-    int bpm = 120;
+    bpm = 120;
 
     for (enum SOUND_INDICES id = DRUM_BD_HARD; id < SOUND_COUNT; ++id) {
         AudioMixer_readWaveFileIntoMemory(wavPaths[id], &sounds[id]);
@@ -49,9 +49,14 @@ void BeatsInit()
 
 void* beatManager()
 {
+    pthread_mutex_lock(&beatMutex);
+    BEATS local_beat = beat;
+    int local_bpm = bpm;
+    pthread_mutex_unlock(&beatMutex);
+
     while( !beat_stopping )
     {
-        play( beat , bpm );
+        play( local_beat , local_bpm );
     }
 }
 
@@ -71,7 +76,6 @@ void changeBeat( BEATS beats)
 
 void play( BEATS beats , int bpm)
 {
-    pthread_mutex_lock(&beatMutex);
 
     switch ( beats )
     {
@@ -87,7 +91,6 @@ void play( BEATS beats , int bpm)
         
     }
 
-    pthread_mutex_unlock(&beatMutex);
 }
 
 
@@ -180,6 +183,8 @@ void Custom( int bpm )
 
 void beat_clean()
 {
+    pthread_mutex_lock(&beatMutex);
     beat_stopping = true;
-    pthread_join(beatThread , NULL); 
+    pthread_join(beatThread , NULL);
+    pthread_mutex_unlock(&beatMutex);
 }
