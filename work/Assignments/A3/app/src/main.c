@@ -81,7 +81,7 @@ JoyStick        joystick;
 
 GPIOCHIP gp_chip2;
 
-wavedata_t* sounds[SOUND_COUNT];
+wavedata_t sounds[SOUND_COUNT] ;
 
 
 void init_peripherals( GPIOCHIP* gp_chip , uint32_t offsets[] , int offset_count);
@@ -97,13 +97,12 @@ int main()
     
     AudioMixer_init();
 
-    AudioMixer_readWaveFileIntoMemory(DRUM_HARD_PATH , sounds[0]);
-    AudioMixer_readWaveFileIntoMemory(DRUM_SOFT_PATH , sounds[1]);
+    AudioMixer_readWaveFileIntoMemory(DRUM_HARD_PATH , &sounds[DRUM_HARD]);
+    AudioMixer_readWaveFileIntoMemory(DRUM_SOFT_PATH , &sounds[DRUM_SOFT]);
 
-    AudioMixer_queueSound(sounds[0]);
-    AudioMixer_queueSound(sounds[1]);
 
     AudioMixer_cleanup();
+    gpio_cleanup( &gp_chip2 );
 
     return 0;
 }
