@@ -1,6 +1,6 @@
 # CMake Build Configuration for root of project
 cmake_minimum_required(VERSION 3.18)
-project( joystick VERSION 1.0 DESCRIPTION "Joystick" LANGUAGES C)
+project( joystick VERSION 1.0 DESCRIPTION "beatbox" LANGUAGES C)
 
 # Compiler options (inherited by sub-folders)
 set(CMAKE_C_STANDARD 11)
