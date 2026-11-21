@@ -29,8 +29,8 @@
 
 #define OFFSET_COUNT        4
 
-#define DRUM_HARD_PATH "wave-files/100051__menegass__gui-drum-bd-hard.wav"
-#define DRUM_SOFT_PATH "wave-files/100052__menegass__gui-drum-bd-soft.wav"
+#define DRUM_BD_HARD_PATH "wave-files/100051__menegass__gui-drum-bd-hard.wav"
+#define DRUM_BD_SOFT_PATH "wave-files/100052__menegass__gui-drum-bd-soft.wav"
 #define DRUM_CC_PATH "wave-files/100053__menegass__gui-drum-cc.wav"
 #define DRUM_CH_PATH "wave-files/100054__menegass__gui-drum-ch.wav"
 #define DRUM_CO_PATH "wave-files/100055__menegass__gui-drum-co.wav"
@@ -49,8 +49,8 @@
 
 enum SOUND_INDICES
 {
-    DRUM_HARD,
-    DRUM_SOFT,
+    DRUM_BD_HARD,
+    DRUM_BD_SOFT,
     DRUM_CC,
     DRUM_CH,
     DRUM_CO,
@@ -126,8 +126,8 @@ int main()
     
     AudioMixer_init();
 
-    AudioMixer_readWaveFileIntoMemory(DRUM_HARD_PATH , &sounds[DRUM_HARD]);
-    AudioMixer_readWaveFileIntoMemory(DRUM_SOFT_PATH , &sounds[DRUM_SOFT]);
+    AudioMixer_readWaveFileIntoMemory(DRUM_BD_HARD_PATH , &sounds[DRUM_BD_HARD]);
+    AudioMixer_readWaveFileIntoMemory(DRUM_BD_SOFT_PATH , &sounds[DRUM_BD_SOFT]);
 
 
     AudioMixer_cleanup();
