@@ -2,6 +2,7 @@
 #include "beats.h"
 #include <stdatomic.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static atomic_bool stopping;
 
@@ -27,7 +28,14 @@ void *controls_run(void *arg)
     bool pressed = false, stablePress = false;
     int previousDirection = 0;
     long long edgeTime = 0, repeatAt = 0, sampleAt = 0;
-    long long drumReady[3] = {0};
+    // Learn resting levels with the knob released and the board stationary.
+    read_rotary(&c->rotary);
+    const int releasedLevel = c->rotary.sel;
+    fprintf(stderr, "Rotary SEL offset %u: released level %d\n",
+            c->rotary.gpio_offsets[SEL], releasedLevel);
+    long long quietSince = 0, nextHit = 0;
+    bool armed = false;
+    int previousAxis = -1;
     const int drum[3] = {DRUM_SNARE_HARD, DRUM_CH, DRUM_BD_HARD};
     read_Accel(&c->accel);
     double baseline[3] = {c->accel.x, c->accel.y, c->accel.z};
@@ -42,7 +50,7 @@ void *controls_run(void *arg)
             changeBpm(tempo);
         }
 
-        bool down = !c->rotary.sel;
+        bool down = c->rotary.sel != releasedLevel;
         if (down != pressed) {
             pressed = down;
             edgeTime = now;
@@ -52,6 +60,8 @@ void *controls_run(void *arg)
             if (stablePress) {
                 mode = (mode + 1) % BEAT_COUNT;
                 changeBeat(mode);
+                fprintf(stderr, "Rotary mode: %s\n",
+                        mode == ROCK ? "rock" : mode == CUSTOM ? "custom" : "off");
             }
         }
 
@@ -71,7 +81,7 @@ void *controls_run(void *arg)
 
             read_Accel(&c->accel);
             int sample[3] = {c->accel.x, c->accel.y, c->accel.z};
-            int strongest = -1, peak = 220;
+            int strongest = -1, peak = 0;
             for (int axis = 0; axis < 3; axis++) {
                 int delta = abs(sample[axis] - (int)baseline[axis]);
                 baseline[axis] += (sample[axis] - baseline[axis]) / 8.0;
@@ -80,10 +90,21 @@ void *controls_run(void *arg)
                     strongest = axis;
                 }
             }
-            if (strongest >= 0 && now >= drumReady[strongest]) {
-                AudioMixer_queueSound(&sounds[drum[strongest]]);
-                drumReady[strongest] = now + 150;
+            // Rearm only after all axes settle. A strike and its rebound
+            // should produce one drum, even if the dominant axis changes.
+            if (peak < 120) {
+                if (!quietSince) quietSince = now;
+                if (now - quietSince >= 50 && now >= nextHit) armed = true;
+            } else {
+                quietSince = 0;
             }
+            int candidate = peak >= 320 ? strongest : -1;
+            if (armed && candidate >= 0 && candidate == previousAxis) {
+                AudioMixer_queueSound(&sounds[drum[candidate]]);
+                armed = false;
+                nextHit = now + 150;
+            }
+            previousAxis = candidate;
         }
         const struct timespec delay = {0, 1000000};
         nanosleep(&delay, NULL);
