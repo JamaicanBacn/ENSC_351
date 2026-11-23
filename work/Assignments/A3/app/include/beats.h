@@ -86,10 +86,6 @@ static char *const wavPaths[SOUND_COUNT] = {
 void BeatsInit();
 void changeBeat(BEATS beat);
 void changeBpm(int new_bpm);
-void play( BEATS beats , int bmp);
-
-void Rock( int bpm );
-void Custom( int bpm );
 void beat_clean();
 
 #endif
