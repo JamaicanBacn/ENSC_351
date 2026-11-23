@@ -1,6 +1,7 @@
 #include    <stdint.h>
 #include    <signal.h>
 #include    "controls.h"
+#include    "udp.h"
 
 #include    "gpio.h"
 #include    "spi.h"
@@ -98,8 +99,7 @@ int main(void)
     pthread_t inputThread;
     int error = pthread_create(&inputThread, NULL, controls_run, &controls);
     if (error == 0) {
-        int received;
-        error = sigwait(&signals, &received);
+        error = udp_run(&signals);
         controls_stop();
         pthread_join(inputThread, NULL);
     }
@@ -108,6 +108,6 @@ int main(void)
     for (int i = 0; i < SOUND_COUNT; i++) AudioMixer_freeWaveFileData(&sounds[i]);
     spi_close();
     gpio_cleanup(&chip);
-    if (error) fprintf(stderr, "Input control error: %s\n", strerror(error));
+    if (error) fprintf(stderr, "Beatbox control error: %s\n", strerror(error));
     return error ? EXIT_FAILURE : EXIT_SUCCESS;
 }

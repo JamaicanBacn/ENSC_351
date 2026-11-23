@@ -1,4 +1,5 @@
 #include "controls.h"
+#include "timing.h"
 #include "beats.h"
 #include <stdatomic.h>
 #include <stdlib.h>
@@ -13,31 +14,21 @@ static long long nowMs(void)
     return t.tv_sec * 1000LL + t.tv_nsec / 1000000;
 }
 
-static int clamp(int value, int low, int high)
-{
-    if (value < low) return low;
-    if (value > high) return high;
-    return value;
-}
-
 void *controls_run(void *arg)
 {
     Controls *c = arg;
-    int tempo = 120;
-    BEATS mode = ROCK;
     bool pressed = false, stablePress = false;
     int previousDirection = 0;
     long long edgeTime = 0, repeatAt = 0, sampleAt = 0;
     // Learn resting levels with the knob released and the board stationary.
     read_rotary(&c->rotary);
     const int releasedLevel = c->rotary.sel;
-    fprintf(stderr, "Rotary SEL offset %u: released level %d\n",
-            c->rotary.gpio_offsets[SEL], releasedLevel);
     long long quietSince = 0, nextHit = 0;
     bool armed = false;
     int previousAxis = -1;
     const int drum[3] = {DRUM_SNARE_HARD, DRUM_CH, DRUM_BD_HARD};
     read_Accel(&c->accel);
+    timing_mark(ACCEL_READ);
     double baseline[3] = {c->accel.x, c->accel.y, c->accel.z};
 
     while (!atomic_load(&stopping)) {
@@ -46,8 +37,7 @@ void *controls_run(void *arg)
         read_rotary(&c->rotary);
         int steps = c->rotary.position - previousPosition;
         if (steps) {
-            tempo = clamp(tempo + steps * 5, 40, 300);
-            changeBpm(tempo);
+            adjustBpm(steps * 5);
         }
 
         bool down = c->rotary.sel != releasedLevel;
@@ -58,10 +48,7 @@ void *controls_run(void *arg)
         if (pressed != stablePress && now - edgeTime >= 25) {
             stablePress = pressed;
             if (stablePress) {
-                mode = (mode + 1) % BEAT_COUNT;
-                changeBeat(mode);
-                fprintf(stderr, "Rotary mode: %s\n",
-                        mode == ROCK ? "rock" : mode == CUSTOM ? "custom" : "off");
+                nextBeat();
             }
         }
 
@@ -72,14 +59,13 @@ void *controls_run(void *arg)
             if (c->joystick.y_pos > 0.55f) direction = 1;
             if (c->joystick.y_pos < -0.55f) direction = -1;
             if (direction && (direction != previousDirection || now >= repeatAt)) {
-                int volume = AudioMixer_getVolume();
-                int next = clamp(volume + direction * 5, 0, 100);
-                if (next != volume) AudioMixer_setVolume(next);
+                AudioMixer_adjustVolume(direction * 5);
                 repeatAt = now + (direction == previousDirection ? 180 : 350);
             }
             previousDirection = direction;
 
             read_Accel(&c->accel);
+            timing_mark(ACCEL_READ);
             int sample[3] = {c->accel.x, c->accel.y, c->accel.z};
             int strongest = -1, peak = 0;
             for (int axis = 0; axis < 3; axis++) {
