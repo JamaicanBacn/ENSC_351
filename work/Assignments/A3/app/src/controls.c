@@ -13,18 +13,9 @@ static long long nowMs(void)
     return t.tv_sec * 1000LL + t.tv_nsec / 1000000;
 }
 
-static int clamp(int value, int low, int high)
-{
-    if (value < low) return low;
-    if (value > high) return high;
-    return value;
-}
-
 void *controls_run(void *arg)
 {
     Controls *c = arg;
-    int tempo = 120;
-    BEATS mode = ROCK;
     bool pressed = false, stablePress = false;
     int previousDirection = 0;
     long long edgeTime = 0, repeatAt = 0, sampleAt = 0;
@@ -46,8 +37,7 @@ void *controls_run(void *arg)
         read_rotary(&c->rotary);
         int steps = c->rotary.position - previousPosition;
         if (steps) {
-            tempo = clamp(tempo + steps * 5, 40, 300);
-            changeBpm(tempo);
+            adjustBpm(steps * 5);
         }
 
         bool down = c->rotary.sel != releasedLevel;
@@ -58,8 +48,7 @@ void *controls_run(void *arg)
         if (pressed != stablePress && now - edgeTime >= 25) {
             stablePress = pressed;
             if (stablePress) {
-                mode = (mode + 1) % BEAT_COUNT;
-                changeBeat(mode);
+                BEATS mode = nextBeat();
                 fprintf(stderr, "Rotary mode: %s\n",
                         mode == ROCK ? "rock" : mode == CUSTOM ? "custom" : "off");
             }
@@ -72,9 +61,7 @@ void *controls_run(void *arg)
             if (c->joystick.y_pos > 0.55f) direction = 1;
             if (c->joystick.y_pos < -0.55f) direction = -1;
             if (direction && (direction != previousDirection || now >= repeatAt)) {
-                int volume = AudioMixer_getVolume();
-                int next = clamp(volume + direction * 5, 0, 100);
-                if (next != volume) AudioMixer_setVolume(next);
+                AudioMixer_adjustVolume(direction * 5);
                 repeatAt = now + (direction == previousDirection ? 180 : 350);
             }
             previousDirection = direction;

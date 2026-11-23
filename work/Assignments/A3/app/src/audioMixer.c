@@ -43,6 +43,7 @@ static _Bool stopping = false;
 static pthread_t playbackThreadId;
 static pthread_mutex_t audioMutex = PTHREAD_MUTEX_INITIALIZER;
 
+static pthread_mutex_t volumeMutex = PTHREAD_MUTEX_INITIALIZER;
 static int volume = 0;
 
 void AudioMixer_init(void)
@@ -211,13 +212,16 @@ int AudioMixer_getVolume()
 {
 	// Return the cached volume; good enough unless someone is changing
 	// the volume through other means and the cached value is out of date.
-	return volume;
+	pthread_mutex_lock(&volumeMutex);
+	int current = volume;
+	pthread_mutex_unlock(&volumeMutex);
+	return current;
 }
 
 // Function copied from:
 // http://stackoverflow.com/questions/6787318/set-alsa-master-volume-from-c-code
 // Written by user "trenki".
-void AudioMixer_setVolume(int newVolume)
+static void setVolumeLocked(int newVolume)
 {
 	// Ensure volume is reasonable; If so, cache it for later getVolume() calls.
 	if (newVolume < 0 || newVolume > AUDIOMIXER_MAX_VOLUME) {
@@ -249,6 +253,23 @@ void AudioMixer_setVolume(int newVolume)
     snd_mixer_close(mixerHandle);
 }
 
+
+void AudioMixer_setVolume(int value)
+{
+    pthread_mutex_lock(&volumeMutex);
+    setVolumeLocked(value);
+    pthread_mutex_unlock(&volumeMutex);
+}
+
+void AudioMixer_adjustVolume(int delta)
+{
+    pthread_mutex_lock(&volumeMutex);
+    int value = volume + delta;
+    if (value < 0) value = 0;
+    if (value > AUDIOMIXER_MAX_VOLUME) value = AUDIOMIXER_MAX_VOLUME;
+    if (value != volume) setVolumeLocked(value);
+    pthread_mutex_unlock(&volumeMutex);
+}
 
 // Fill the buff array with new PCM values to output.
 //    buff: buffer to fill with new PCM data from sound bites.

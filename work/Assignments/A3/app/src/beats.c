@@ -100,6 +100,40 @@ static void* beatManager(void* arg)
     }
 }
 
+int getBpm(void)
+{
+    pthread_mutex_lock(&beatMutex);
+    int current = bpm;
+    pthread_mutex_unlock(&beatMutex);
+    return current;
+}
+
+BEATS getBeat(void)
+{
+    pthread_mutex_lock(&beatMutex);
+    BEATS current = beat;
+    pthread_mutex_unlock(&beatMutex);
+    return current;
+}
+
+BEATS nextBeat(void)
+{
+    pthread_mutex_lock(&beatMutex);
+    beat = (beat + 1) % BEAT_COUNT;
+    BEATS current = beat;
+    pthread_mutex_unlock(&beatMutex);
+    return current;
+}
+
+void adjustBpm(int delta)
+{
+    pthread_mutex_lock(&beatMutex);
+    bpm += delta;
+    if (bpm < 40) bpm = 40;
+    if (bpm > 300) bpm = 300;
+    pthread_mutex_unlock(&beatMutex);
+}
+
 void changeBpm( int new_bpm )
 {
     pthread_mutex_lock(&beatMutex);
