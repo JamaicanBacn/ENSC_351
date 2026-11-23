@@ -1,13 +1,13 @@
 #include    <stdint.h>
 #include    <inttypes.h>
+
 #include    "gpio.h"
 #include    "spi.h"
-
-
 #include    "accellerometer.h"
 #include    "rotaryEncoder.h"
 #include    "audioMixer.h"   
 #include    "joystick.h"
+#include    "beats.h"
 
 
 #define SPI_PATH "/dev/spidev0.0"
@@ -29,45 +29,7 @@
 
 #define OFFSET_COUNT        4
 
-#define DRUM_BD_HARD_PATH "wave-files/100051__menegass__gui-drum-bd-hard.wav"
-#define DRUM_BD_SOFT_PATH "wave-files/100052__menegass__gui-drum-bd-soft.wav"
-#define DRUM_CC_PATH "wave-files/100053__menegass__gui-drum-cc.wav"
-#define DRUM_CH_PATH "wave-files/100054__menegass__gui-drum-ch.wav"
-#define DRUM_CO_PATH "wave-files/100055__menegass__gui-drum-co.wav"
-#define DRUM_CYN_HARD_PATH "wave-files/100056__menegass__gui-drum-cyn-hard.wav"
-#define DRUM_CYN_SOFT_PATH "wave-files/100057__menegass__gui-drum-cyn-soft.wav"
-#define DRUM_SNARE_HARD_PATH "wave-files/100058__menegass__gui-drum-snare-hard.wav"
-#define DRUM_SNARE_SOFT_PATH "wave-files/100059__menegass__gui-drum-snare-soft.wav"
-#define DRUM_SPLASH_HARD_PATH "wave-files/100060__menegass__gui-drum-splash-hard.wav"
-#define DRUM_SPLASH_SOFT_PATH "wave-files/100061__menegass__gui-drum-splash-soft.wav"
-#define DRUM_TOM_HI_HARD_PATH "wave-files/100062__menegass__gui-drum-tom-hi-hard.wav"
-#define DRUM_TOM_HI_SOFT_PATH "wave-files/100063__menegass__gui-drum-tom-hi-soft.wav"
-#define DRUM_TOM_LO_HARD_PATH "wave-files/100064__menegass__gui-drum-tom-lo-hard.wav"
-#define DRUM_TOM_LO_SOFT_PATH "wave-files/100065__menegass__gui-drum-tom-lo-soft.wav"
-#define DRUM_TOM_MID_HARD_PATH "wave-files/100066__menegass__gui-drum-tom-mid-hard.wav"
-#define DRUM_TOM_MID_SOFT_PATH "wave-files/100067__menegass__gui-drum-tom-mid-soft.wav"
 
-enum SOUND_INDICES
-{
-    DRUM_BD_HARD,
-    DRUM_BD_SOFT,
-    DRUM_CC,
-    DRUM_CH,
-    DRUM_CO,
-    DRUM_CYN_HARD,
-    DRUM_CYN_SOFT,
-    DRUM_SNARE_HARD,
-    DRUM_SNARE_SOFT,
-    DRUM_SPLASH_HARD,
-    DRUM_SPLASH_SOFT,
-    DRUM_TOM_HI_HARD,
-    DRUM_TOM_HI_SOFT,
-    DRUM_TOM_LO_HARD,
-    DRUM_TOM_LO_SOFT,
-    DRUM_TOM_MID_HARD,
-    DRUM_TOM_MID_SOFT,
-    SOUND_COUNT
-};
 
 const GPIOCHIP0_OFFSETS gpiochip0_offsets = {
     .GPIO_2_OFFSET  = 18,
@@ -110,8 +72,6 @@ JoyStick        joystick;
 
 GPIOCHIP gp_chip2;
 
-wavedata_t sounds[SOUND_COUNT] ;
-
 
 void init_peripherals( GPIOCHIP* gp_chip , uint32_t offsets[] , int offset_count);
 void print_peripherals();
@@ -125,11 +85,16 @@ int main()
 
     
     AudioMixer_init();
+    BeatsInit();
 
-    AudioMixer_readWaveFileIntoMemory(DRUM_BD_HARD_PATH , &sounds[DRUM_BD_HARD]);
-    AudioMixer_readWaveFileIntoMemory(DRUM_BD_SOFT_PATH , &sounds[DRUM_BD_SOFT]);
+    changeBeat(ROCK);
+    sleep(1);
+    changeBeat(NOTHING);
+    sleep(1);
+    changeBeat(CUSTOM);
+    sleep(1);
 
-
+    beat_clean();
     AudioMixer_cleanup();
     gpio_cleanup( &gp_chip2 );
 
