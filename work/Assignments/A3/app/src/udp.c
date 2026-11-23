@@ -1,4 +1,7 @@
 #include "udp.h"
+#include "timing.h"
+#include <sys/timerfd.h>
+#include <stdint.h>
 #include "beats.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -67,14 +70,27 @@ int udp_run(const sigset_t *signals)
         (signalFd = signalfd(-1, signals, SFD_CLOEXEC)) < 0) {
         error = errno;
     }
-    struct pollfd inputs[] = {{fd, POLLIN, 0}, {signalFd, POLLIN, 0}};
+    int timer = -1;
+    struct itimerspec everySecond = {.it_interval.tv_sec = 1, .it_value.tv_sec = 1};
+    if (!error && ((timer = timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC)) < 0 ||
+                   timerfd_settime(timer, 0, &everySecond, NULL) < 0)) error = errno;
+    struct pollfd inputs[] = {{fd, POLLIN, 0}, {signalFd, POLLIN, 0}, {timer, POLLIN, 0}};
     while (!error) {
-        if (poll(inputs, 2, -1) < 0) {
+        if (poll(inputs, 3, -1) < 0) {
             if (errno == EINTR) continue;
             error = errno;
             break;
         }
         if (inputs[1].revents & POLLIN) break;
+        if (inputs[2].revents & POLLIN) {
+            uint64_t ticks;
+            if (read(timer, &ticks, sizeof ticks) < 0) {
+                error = errno;
+                break;
+            }
+            timing_report();
+            if (!inputs[0].revents) continue;
+        }
         if (!(inputs[0].revents & POLLIN)) {
             error = EIO;
             break;
@@ -98,6 +114,7 @@ int udp_run(const sigset_t *signals)
             perror("UDP reply");
         if (stop) break;
     }
+    if (timer >= 0) close(timer);
     if (signalFd >= 0) close(signalFd);
     close(fd);
     return error;

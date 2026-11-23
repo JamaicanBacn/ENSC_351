@@ -2,6 +2,7 @@
 // which are left as incomplete.
 // Note: Generates low latency audio on BeagleBone Black; higher latency found on host.
 #include "audioMixer.h"
+#include "timing.h"
 #include <alsa/asoundlib.h>
 #include <stdbool.h>
 #include <pthread.h>
@@ -60,7 +61,7 @@ void AudioMixer_init(void)
 	// Open the PCM output
 	int err = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (err < 0) {
-		printf("Playback open error: %s\n", snd_strerror(err));
+		fprintf(stderr, "Playback open error: %s\n", snd_strerror(err));
 		exit(EXIT_FAILURE);
 	}
 
@@ -73,7 +74,7 @@ void AudioMixer_init(void)
 			1,			// Allow software resampling
 			50000);		// 0.05 seconds per buffer
 	if (err < 0) {
-		printf("Playback open error: %s\n", snd_strerror(err));
+		fprintf(stderr, "Playback open error: %s\n", snd_strerror(err));
 		exit(EXIT_FAILURE);
 	}
 
@@ -187,7 +188,7 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 
 void AudioMixer_cleanup(void)
 {
-	printf("Stopping audio...\n");
+
 
 	// Stop the PCM generation thread
 	stopping = true;
@@ -203,7 +204,7 @@ void AudioMixer_cleanup(void)
 	free(playbackBuffer);
 	playbackBuffer = NULL;
 
-	printf("Done stopping audio...\n");
+
 	fflush(stdout);
 }
 
@@ -225,7 +226,7 @@ static void setVolumeLocked(int newVolume)
 {
 	// Ensure volume is reasonable; If so, cache it for later getVolume() calls.
 	if (newVolume < 0 || newVolume > AUDIOMIXER_MAX_VOLUME) {
-		printf("ERROR: Volume must be between 0 and 100.\n");
+		fprintf(stderr, "ERROR: Volume must be between 0 and 100.\n");
 		return;
 	}
 	volume = newVolume;
@@ -380,6 +381,7 @@ void* playbackThread(void* _arg)
 	while (!stopping) {
 		// Generate next block of audio
 		fillPlaybackBuffer(playbackBuffer, playbackBufferSize);
+		timing_mark(AUDIO_REFILL);
 
 		// Output the audio
 		snd_pcm_sframes_t frames = snd_pcm_writei(handle,
@@ -387,7 +389,6 @@ void* playbackThread(void* _arg)
 
 		// Check for (and handle) possible error conditions on output
 		if (frames < 0) {
-			fprintf(stderr, "AudioMixer: writei() returned %li\n", frames);
 			frames = snd_pcm_recover(handle, frames, 1);
 		}
 		if (frames < 0) {
@@ -396,7 +397,7 @@ void* playbackThread(void* _arg)
 			exit(EXIT_FAILURE);
 		}
 		if (frames > 0 && frames < playbackBufferSize) {
-			printf("Short write (expected %li, wrote %li)\n",
+			fprintf(stderr, "Short write (expected %li, wrote %li)\n",
 					playbackBufferSize, frames);
 		}
 	}
